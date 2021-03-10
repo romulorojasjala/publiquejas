@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace publiquejas
 {
-    class Program
+    public class Ubicacion
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("t");
-            Console.ReadKey();
+        private string _ubicacion;
+        public Ubicacion(string ubicacion) {
+            _ubicacion = ubicacion;
+            
         }
     }
 }
