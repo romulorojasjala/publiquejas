@@ -44,7 +44,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdministradorDePublicaciones.cs" />
+    <Compile Include="Categoria.cs" />
     <Compile Include="Ciudadano.cs" />
+    <Compile Include="Publicacion.cs" />
     <Compile Include="Ubicacion.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

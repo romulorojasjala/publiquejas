@@ -11,7 +11,6 @@ namespace publiquejas
         private string _ubicacion;
         public Ubicacion(string ubicacion) {
             _ubicacion = ubicacion;
-            
         }
     }
 }

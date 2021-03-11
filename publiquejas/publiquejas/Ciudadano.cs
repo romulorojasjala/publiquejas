@@ -8,17 +8,23 @@ namespace publiquejas
 {
     public class Ciudadano
     {
-        public string Nombre { get; set; }        
-        public string Apellido { get; set; }
-        public DateTime FechaDeNacimiento { get; set; }
-        public Ubicacion Ubicacion { get; set; }
+        private string _userName;
+        private string _nombre;
+        private string _apellido;
+        private DateTime _fechaDeNacimiento;
+        private Ubicacion _ubicacion;
 
-        public Ciudadano(string nombre, string apellido, DateTime fechaDeNacimiento, Ubicacion ubicacion)
+        public string UserName { get { return _userName; } }
+        public string NombreCompleto { get { return _nombre + " " + _apellido; } }
+        public DateTime FechaDeNacimiento { get { return _fechaDeNacimiento; } }
+
+        public Ciudadano(string userName, string nombre, string apellido, DateTime fechaDeNacimiento, Ubicacion ubicacion)
         {
-            Nombre = nombre;
-            Apellido = apellido;
-            FechaDeNacimiento = fechaDeNacimiento;
-            Ubicacion = ubicacion;
+            _userName = userName;
+            _nombre = nombre;
+            _apellido = apellido;
+            _fechaDeNacimiento = fechaDeNacimiento;
+            _ubicacion = ubicacion;
         }
     }
 }
