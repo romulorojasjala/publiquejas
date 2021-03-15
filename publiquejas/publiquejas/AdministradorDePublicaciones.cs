@@ -10,9 +10,11 @@ namespace publiquejas
     {
         private List<Ciudadano> _ciudadanos;
         private List<Categoria> _categorias;
-        private List<Publicacion> _publicaciones;
+        public  List<Publicacion> _publicaciones;
 
         public List<Ciudadano>  Ciudadanos { get { return _ciudadanos; } }
+        public List<Publicacion> Publicaciones { get { return _publicaciones; } }
+       
 
         public AdministradorDePublicaciones()
         {
@@ -22,6 +24,8 @@ namespace publiquejas
         }
 
         public IList<Ciudadano> GetCiudadanos => _ciudadanos.AsReadOnly();
+        
+        public IList<Publicacion> GetPublicaciones => _publicaciones.AsReadOnly();
 
         public void AgregarCiudadano(string userName, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion) 
         { 
@@ -44,9 +48,10 @@ namespace publiquejas
             Ciudadano ciudadano = BuscarCiudadano(userNameDeCiudadano);
             Categoria categoria = BuscarCategoria(nombreDeCategoria);
 
-            if (ciudadano != null && categoria != null) {
+           if (categoria == null && ciudadano == null)
+            {
                 Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano);
-                categoria.AgregarPublicacion(publicacion);
+                //Categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
             }
         }

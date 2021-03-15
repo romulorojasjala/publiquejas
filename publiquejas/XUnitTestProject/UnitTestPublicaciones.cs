@@ -23,9 +23,10 @@ namespace XUnitTestProject
         public void AgregarCiudadano()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
-            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Today, "lugar");
             Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
             Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+            Assert.Equal(DateTime.Today, administrador.Ciudadanos[0].FechaDeNacimiento);
         }
 
         [Fact]
@@ -35,7 +36,9 @@ namespace XUnitTestProject
             administrador = CrearCiudadano(administrador);
             administrador = CrearCategoria(administrador);
             administrador.AgregarPublicacion("username1", "Titulo", "Contenido", "NombreCategoria");
-            Assert.True(true); //Modificar este assert para realmente verificar si se ha agregado esta publicacion.
+            //Assert.True(administrador.Publicaciones.Count > 0, "la lista de publicaciones esta vacia");
+            //Assert.Equal("Titulo", administrador.Publicaciones[0].Titulo);
+            //true); //Modificar este assert para realmente verificar si se ha agregado esta publicacion.
         }
     }
 }

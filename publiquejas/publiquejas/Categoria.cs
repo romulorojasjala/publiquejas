@@ -15,8 +15,9 @@ namespace publiquejas
         }
 
         public string Nombre { get { return _nombre; } }
+        //public List<Publicacion> Publicacion { get { return _publicaciones; } }
 
-        internal void AgregarPublicacion(Publicacion publicacion)
+        public void AgregarPublicacion(Publicacion publicacion)
         {
             _publicaciones.Add(publicacion);
         }
