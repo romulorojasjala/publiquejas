@@ -11,6 +11,9 @@ namespace publiquejas
         string _titulo;
         string _contenido;
         Ciudadano _ciudadano;
+        ListaDeComentarios _listaDeComentarios;
+
+        public string TituloPublicacion() { return _titulo; }
 
         public Publicacion(string titulo, string contenido, Ciudadano ciudadano)
         {

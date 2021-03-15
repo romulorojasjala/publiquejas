@@ -46,6 +46,9 @@
     <Compile Include="AdministradorDePublicaciones.cs" />
     <Compile Include="Categoria.cs" />
     <Compile Include="Ciudadano.cs" />
+    <Compile Include="Comentario.cs" />
+    <Compile Include="ListaDeComentarios.cs" />
+    <Compile Include="ListaDePublicaciones.cs" />
     <Compile Include="Publicacion.cs" />
     <Compile Include="Ubicacion.cs" />
     <Compile Include="Program.cs" />

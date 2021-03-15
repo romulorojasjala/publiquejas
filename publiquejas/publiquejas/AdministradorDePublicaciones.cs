@@ -51,6 +51,15 @@ namespace publiquejas
             }
         }
 
+        public void AgregarComentarioAPublicacion(string tituloPublicacion, string nuevoComentario)
+        {
+            Publicacion publicación = BuscarPublicación(tituloPublicacion);
+            if (publicación != null)
+            {
+                Comentario comentario = new Comentario(publicación, nuevoComentario);
+            }
+        }
+
         private Ciudadano BuscarCiudadano(string userNameDeCiudadano)
         {
             return _ciudadanos.Where(ciudadano => ciudadano.UserName.Equals(userNameDeCiudadano)).FirstOrDefault();
