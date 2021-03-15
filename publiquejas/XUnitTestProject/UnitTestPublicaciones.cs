@@ -9,13 +9,18 @@ namespace XUnitTestProject
         
         internal AdministradorDePublicaciones CrearCiudadano(AdministradorDePublicaciones admin)
         {
-            admin.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            admin.AgregarCiudadano("username1", "Nombre", "Apellido", DateTime.Now, "lugar");
             return admin;
         }
 
         internal AdministradorDePublicaciones CrearCategoria(AdministradorDePublicaciones admin)
         {
-            admin.AgregarCategoria("Nombre");
+            admin.AgregarCategoria("NombreCategoria");
+            return admin;
+        }
+        internal AdministradorDePublicaciones CrearPublicacion(AdministradorDePublicaciones admin)
+        {
+            admin.AgregarPublicacion("username1", "publicacionId", "Titulo", "Contenido", "NombreCategoria");
             return admin;
         }
 
@@ -34,7 +39,19 @@ namespace XUnitTestProject
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             administrador = CrearCiudadano(administrador);
             administrador = CrearCategoria(administrador);
-            administrador.AgregarPublicacion("username1", "Titulo", "Contenido", "NombreCategoria");
+            administrador.AgregarPublicacion("username1", "publicacionId", "Titulo", "Contenido", "NombreCategoria");
+
+            Assert.True(administrador.GetPublicaciones.Count > 0); //Modificar este assert para realmente verificar si se ha agregado esta publicacion.
+        }
+
+        [Fact]
+        public void AgregarComentarioAPublicacion()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador = CrearCiudadano(administrador);
+            administrador = CrearCategoria(administrador);
+            administrador = CrearPublicacion(administrador);
+            administrador.AgregarComentario("publicacionId", "comentarioContenido", "username1");            
             Assert.True(true); //Modificar este assert para realmente verificar si se ha agregado esta publicacion.
         }
     }

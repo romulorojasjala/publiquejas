@@ -12,7 +12,7 @@ namespace publiquejas
         private List<Categoria> _categorias;
         private List<Publicacion> _publicaciones;
 
-        public List<Ciudadano>  Ciudadanos { get { return _ciudadanos; } }
+        public List<Ciudadano>  Ciudadanos { get { return _ciudadanos; } }        
 
         public AdministradorDePublicaciones()
         {
@@ -22,6 +22,8 @@ namespace publiquejas
         }
 
         public IList<Ciudadano> GetCiudadanos => _ciudadanos.AsReadOnly();
+
+        public IList<Publicacion> GetPublicaciones => _publicaciones.AsReadOnly();
 
         public void AgregarCiudadano(string userName, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion) 
         { 
@@ -39,16 +41,31 @@ namespace publiquejas
             }
         }
 
-        public void AgregarPublicacion(string userNameDeCiudadano, string titulo, string contenido, string nombreDeCategoria)
+        public void AgregarComentario(string publicacionId, string comentario, string userNameDeCiudadano)
+        {
+            Publicacion publicacion = BuscarPublicacion(publicacionId);
+            Ciudadano ciudadano = BuscarCiudadano(userNameDeCiudadano);
+            if (publicacion != null && ciudadano != null)
+            {
+                publicacion.AgregarComentario(ciudadano, comentario);
+            }
+        }
+
+        public void AgregarPublicacion(string userNameDeCiudadano, string publicacionId, string titulo, string contenido, string nombreDeCategoria)
         {
             Ciudadano ciudadano = BuscarCiudadano(userNameDeCiudadano);
             Categoria categoria = BuscarCategoria(nombreDeCategoria);
 
             if (ciudadano != null && categoria != null) {
-                Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano);
+                Publicacion publicacion = new Publicacion(publicacionId, titulo, contenido, ciudadano);
                 categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
             }
+        }
+
+        private Publicacion BuscarPublicacion(string publicacionId)
+        {
+            return _publicaciones.Where(publicacion => publicacion.PublicacionID.Equals(publicacionId)).FirstOrDefault();
         }
 
         private Ciudadano BuscarCiudadano(string userNameDeCiudadano)
