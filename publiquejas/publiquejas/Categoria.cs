@@ -7,6 +7,7 @@ namespace publiquejas
     {
         private string _nombre;
         private List<Publicacion> _publicaciones;
+        
 
         public Categoria(string nombreCategoria)
         {

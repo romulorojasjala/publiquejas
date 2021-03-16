@@ -12,16 +12,15 @@ namespace publiquejas
         private List<Categoria> _categorias;
         private List<Publicacion> _publicaciones;
 
-        public List<Ciudadano>  Ciudadanos { get { return _ciudadanos; } }
-
         public AdministradorDePublicaciones()
         {
-            _ciudadanos = new List<Ciudadano>(); 
+            _ciudadanos = new List<Ciudadano>();
             _categorias = new List<Categoria>();
             _publicaciones = new List<Publicacion>();
         }
 
-        public IList<Ciudadano> GetCiudadanos => _ciudadanos.AsReadOnly();
+        public IList<Ciudadano> Ciudadanos => _ciudadanos.AsReadOnly();
+        public IList<Publicacion> Publicaciones => _publicaciones.AsReadOnly();
 
         public void AgregarCiudadano(string userName, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion) 
         { 
