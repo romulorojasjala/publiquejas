@@ -1,6 +1,8 @@
 using System;
 using Xunit;
 using publiquejas;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace XUnitTestProject
 {
@@ -17,23 +19,26 @@ namespace XUnitTestProject
 
         internal AdministradorDePublicaciones CrearCategorias(AdministradorDePublicaciones admin)
         {
-            admin.AgregarCategoria("Nombre");
-            admin.AgregarCategoria("Nombre2");
-            admin.AgregarCategoria("Nombre3");
+            admin.AgregarCategoria("Categoria");
+            admin.AgregarCategoria("Categoria2");
+            admin.AgregarCategoria("Categoria3");
+            admin.AgregarCategoria("Categoria4");
+            admin.AgregarCategoria("Categoria5");
+            
             return admin;
         }
 
         internal AdministradorDePublicaciones CrearPublicaciones(AdministradorDePublicaciones admin)
         {
-            admin.AgregarPublicacion("userName", "Titulo", "Contenido", "Categoria");
+            admin.AgregarPublicacion("userName", "Titulo1", "Contenido", "Categoria");
             admin.AgregarPublicacion("userName", "Titulo2", "Contenido2", "Categoria2");
             admin.AgregarPublicacion("userName", "Titulo3", "Contenido3", "Categoria3");
             admin.AgregarPublicacion("userName", "Titulo4", "Contenido4", "Categoria4");
             admin.AgregarPublicacion("userName", "Titulo5", "Contenido5", "Categoria5");
 
-            admin.AgregarPublicacion("userName2", "Titulo", "Contenido", "Categoria");
-            admin.AgregarPublicacion("userName2", "Titulo2", "Contenido2", "Categoria2");
-            admin.AgregarPublicacion("userName2", "Titulo3", "Contenido3", "Categoria3");
+            admin.AgregarPublicacion("userName2", "Titulo6", "Contenido", "Categoria");
+            admin.AgregarPublicacion("userName2", "Titulo7", "Contenido2", "Categoria2");
+            admin.AgregarPublicacion("userName2", "Titulo8", "Contenido3", "Categoria3");
 
             return admin;
         }
@@ -54,7 +59,7 @@ namespace XUnitTestProject
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             administrador = CrearCiudadanos(administrador);
             administrador = CrearCategorias(administrador);
-            administrador.AgregarPublicacion("userName", "Titulo", "Contenido", "Nombre");
+            administrador.AgregarPublicacion("userName", "Titulo", "Contenido", "Categoria");
             Assert.True(administrador.Publicaciones.Count > 0, "la lista de publicaciones esta vacia");
         }
 
@@ -64,6 +69,35 @@ namespace XUnitTestProject
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             administrador = CrearPublicaciones(administrador);
 
+        }
+
+        [Fact]
+        public void DeberiaBuscarPublicacionesPorCategoria()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+            List<TerminoDeBusqueda> terminosDeBusqueda = new List<TerminoDeBusqueda>
+            {
+                new TerminoCategoria("Categoria3")
+            };
+            var publicacionesEncontradas = administrador.BuscarPublicacion(terminosDeBusqueda);
+            Assert.Equal(2, publicacionesEncontradas.Count);
+
+            Assert.Equal("Titulo3", publicacionesEncontradas.First().Titulo);
+            Assert.Equal("Titulo8", publicacionesEncontradas.Last().Titulo);
+        }
+
+        [Fact]
+        public void DeberiaBuscarPublicacionesPorCategoriaYDevolverVacioSiNoExistenPublicaciones()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearPublicaciones(administrador);
+            List<TerminoDeBusqueda> terminosDeBusqueda = new List<TerminoDeBusqueda>();
+            terminosDeBusqueda.Add(new TerminoCategoria("CategoriaNoExistente"));
+            var publicacionesEncontradas = administrador.BuscarPublicacion(terminosDeBusqueda);
+            Assert.Empty(publicacionesEncontradas);
         }
 
     }

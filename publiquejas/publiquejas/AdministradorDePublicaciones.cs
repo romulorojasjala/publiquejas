@@ -44,7 +44,7 @@ namespace publiquejas
             Categoria categoria = BuscarCategoria(nombreDeCategoria);
 
             if (ciudadano != null && categoria != null) {
-                Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano);
+                Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano, categoria);
                 categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
             }
@@ -60,5 +60,28 @@ namespace publiquejas
             return _categorias.Where(categoria => categoria.Nombre.Equals(nombreDeCategoria)).FirstOrDefault();
         }
 
+        public List<Publicacion> BuscarPublicacion(List<TerminoDeBusqueda> terminosDeBusqueda)
+        {
+            //var publicaciones = _publicaciones;
+
+            //terminosDeBusqueda.ForEach(termino =>
+            //{
+            //    publicaciones = termino.filtrar(publicaciones);
+            //});
+
+            //return publicaciones;
+
+            var publicaciones = new List<Publicacion>();
+
+            _publicaciones.ForEach(publicacion =>
+            {
+                if (publicacion.cumple(terminosDeBusqueda))
+                {
+                    publicaciones.Add(publicacion);
+                }
+            });
+
+            return publicaciones;
+        }
     }
 }
