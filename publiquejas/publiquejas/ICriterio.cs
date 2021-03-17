@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace publiquejas
 {
-    public class Criterio
+    public interface ICriterio
     {
+        int Calcular(Publicacion publicacion);
     }
 }

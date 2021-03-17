@@ -11,16 +11,19 @@ namespace publiquejas
         private List<Ciudadano> _ciudadanos;
         private List<Categoria> _categorias;
         private List<Publicacion> _publicaciones;
+        private List<Ranking> _rankings;
+
+        public IList<Ciudadano> Ciudadanos => _ciudadanos.AsReadOnly();
+        public IList<Publicacion> Publicaciones => _publicaciones.AsReadOnly();
+        public IList<Ranking> Rankings => _rankings.AsReadOnly();
 
         public AdministradorDePublicaciones()
         {
             _ciudadanos = new List<Ciudadano>();
             _categorias = new List<Categoria>();
             _publicaciones = new List<Publicacion>();
+            _rankings = new List<Ranking>();
         }
-
-        public IList<Ciudadano> Ciudadanos => _ciudadanos.AsReadOnly();
-        public IList<Publicacion> Publicaciones => _publicaciones.AsReadOnly();
 
         public void AgregarCiudadano(string userName, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion) 
         { 
@@ -48,6 +51,11 @@ namespace publiquejas
                 categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
             }
+        }
+
+        public void GenerarRanking(string criterio)
+        {
+            Criterios criterios = (Criterios)Enum.Parse(typeof(Criterios), criterio);
         }
 
         private Ciudadano BuscarCiudadano(string userNameDeCiudadano)

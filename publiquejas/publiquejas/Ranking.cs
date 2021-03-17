@@ -8,25 +8,36 @@ namespace publiquejas
 {
     public class Ranking
     {
-        private Criterio _criterio;
+        private IList<ICriterio> _criterios;
         //private DateTime _fechaCalculo;
         private int _cantidad;
-        private List<Publicacion> _publicaciones;
+        private SortedDictionary<int, Publicacion> _publicaciones;
 
-        public IList<Publicacion> Publicaciones => _publicaciones.AsReadOnly();
+        public SortedDictionary<int, Publicacion> Publicaciones => _publicaciones;
 
-        public Ranking(Criterio criterio, int cantidad)
+        public Ranking(IList<ICriterio> criterios, int cantidad)
         {
-            _criterio = criterio;
+            _criterios = criterios;
             _cantidad = cantidad;
+            _publicaciones = new SortedDictionary<int, Publicacion>(Comparer<int>.Create((x, y) => y.CompareTo(x)));
         }
 
         public void CalcularRanking(List<Publicacion> publicaciones)
         {
-            // No deberiamos asignar todas las publicaciones del argumento del metodo al atributo del objeto.
-            // Pero por el momento no tenemos el mecanismo para evaluar el criterio contra las publicaciones
-            // que recibimos.
-            this._publicaciones = publicaciones;
+            _publicaciones.Clear();
+            foreach(Publicacion publicacion in  publicaciones)
+            {
+                int valoracion = 0;
+                foreach(ICriterio criterio in _criterios)
+                {
+                    valoracion += criterio.Calcular(publicacion);
+                }
+                this._publicaciones.Add(valoracion, publicacion);
+                if (this._publicaciones.Count() >= this._cantidad)
+                {
+                    break;
+                }
+            }
         }
     }
 }
