@@ -76,7 +76,7 @@ namespace publiquejas
 
             terminosDeBusqueda.ForEach(termino =>
             {
-                ciudadanos = termino.filtrar<Ciudadano>(ciudadanos);
+                ciudadanos = termino.filtrar(ciudadanos);
             });
 
             return ciudadanos;
@@ -84,7 +84,7 @@ namespace publiquejas
 
         //public List<T> Buscar<T>(List<TerminoDeBusqueda> terminosDeBusqueda, string tipo)
         //{
-        //    var buscables = tipo == "PUBLICACION" ? _publicaciones.Cast<Buscable>().ToList() : _ciudadanos.Cast<Buscable>().ToList();
+        //    var buscables = tipo == "PUBLICACION" ? _publicaciones : _ciudadanos;
 
         //    terminosDeBusqueda.ForEach(termino =>
         //    {
