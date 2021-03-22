@@ -115,42 +115,5 @@ namespace XUnitTestProject
             Assert.Single(ciudadanosEncontrados);
             Assert.Equal("userName2", ciudadanosEncontrados.First().UserName);
         }
-
-        //[Fact]
-        //public void DeberiaBuscarPublicacionesPorCategoriaBuscadorGenerico()
-        //{
-        //    AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
-        //    CrearCiudadanos(administrador);
-        //    CrearCategorias(administrador);
-        //    CrearPublicaciones(administrador);
-        //    List<TerminoDeBusqueda> terminosDeBusqueda = new List<TerminoDeBusqueda>
-        //    {
-        //        new TerminoCategoria("Categoria3")
-        //    };
-        //    var publicacionesEncontradas = administrador.Buscar<Publicacion>(terminosDeBusqueda, "PUBLICACION");
-        //    Assert.Equal(2, publicacionesEncontradas.Count);
-
-        //    Assert.Equal("Titulo3", publicacionesEncontradas.First().Titulo);
-        //    Assert.Equal("Titulo8", publicacionesEncontradas.Last().Titulo);
-        //}
-
-
-        //[Fact]
-        //public void DeberiaBuscarCiudadanosPorNombreDeUsuarioBuscadorGenerico()
-        //{
-        //    AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
-        //    CrearCiudadanos(administrador);
-        //    CrearCategorias(administrador);
-        //    CrearPublicaciones(administrador);
-        //    List<TerminoDeBusqueda> terminosDeBusqueda = new List<TerminoDeBusqueda>
-        //    {
-        //        new TerminoTexto("UserName", "userName2")
-        //    };
-        //    var ciudadanosEncontrados = administrador.Buscar<Ciudadano>(terminosDeBusqueda, "CIUDADANO");
-        //    Assert.Single(ciudadanosEncontrados);
-        //    Assert.Equal("userName2", ciudadanosEncontrados.First().UserName);
-        //}
-
     }
-
 }

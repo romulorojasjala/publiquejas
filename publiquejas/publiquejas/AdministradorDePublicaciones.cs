@@ -81,17 +81,5 @@ namespace publiquejas
 
             return ciudadanos;
         }
-
-        //public List<T> Buscar<T>(List<TerminoDeBusqueda> terminosDeBusqueda, string tipo)
-        //{
-        //    var buscables = tipo == "PUBLICACION" ? _publicaciones : _ciudadanos;
-
-        //    terminosDeBusqueda.ForEach(termino =>
-        //    {
-        //        buscables = termino.filtrar<T>(buscables);
-        //    });
-
-        //    return buscables;
-        //}
     }
 }
