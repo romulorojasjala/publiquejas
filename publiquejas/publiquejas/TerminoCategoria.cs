@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace publiquejas
@@ -12,15 +13,13 @@ namespace publiquejas
             this._categoria = categoria;
         }
 
-        public override List<Publicacion> filtrar(List<Publicacion> publicaciones)
+        public List<Buscable> filtrar(List<Buscable> elementosAFiltrar)
         {
-            return publicaciones.Where((publicacion) => _categoria.Equals(publicacion.Categoria.Nombre)).ToList();
-        }
-
-
-        public override bool cumple(Publicacion publicacion)
-        {
-            return publicacion.Categoria.Nombre.Equals(_categoria);
+            return elementosAFiltrar.Where((buscable) =>
+            {
+                var categoria = buscable.getPropertyValue("categoria") as Categoria;
+                return categoria.Nombre.Equals(_categoria);
+            }).ToList();
         }
     }
 }

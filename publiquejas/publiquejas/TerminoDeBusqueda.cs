@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace publiquejas
 {
-    public abstract class TerminoDeBusqueda
+    public interface TerminoDeBusqueda
     {
-        public abstract List<Publicacion> filtrar(List<Publicacion> publicaciones);
-        public abstract bool cumple(Publicacion publicacion);
+        List<Buscable> filtrar(List<Buscable> elementosAFiltrar);
     }
 }

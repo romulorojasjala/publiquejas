@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace publiquejas
 {
@@ -62,26 +60,26 @@ namespace publiquejas
 
         public List<Publicacion> BuscarPublicacion(List<TerminoDeBusqueda> terminosDeBusqueda)
         {
-            //var publicaciones = _publicaciones;
+            var publicaciones = _publicaciones.Cast<Buscable>().ToList();
 
-            //terminosDeBusqueda.ForEach(termino =>
-            //{
-            //    publicaciones = termino.filtrar(publicaciones);
-            //});
-
-            //return publicaciones;
-
-            var publicaciones = new List<Publicacion>();
-
-            _publicaciones.ForEach(publicacion =>
+            terminosDeBusqueda.ForEach(termino =>
             {
-                if (publicacion.cumple(terminosDeBusqueda))
-                {
-                    publicaciones.Add(publicacion);
-                }
+                publicaciones = termino.filtrar(publicaciones);
             });
 
-            return publicaciones;
+            return publicaciones.Cast<Publicacion>().ToList();
+        }
+
+        public List<Ciudadano> BuscarCiudadanos(List<TerminoDeBusqueda> terminosDeBusqueda)
+        {
+            var ciudadanos = _ciudadanos.Cast<Buscable>().ToList();
+
+            terminosDeBusqueda.ForEach(termino =>
+            {
+                ciudadanos = termino.filtrar(ciudadanos);
+            });
+
+            return ciudadanos.Cast<Ciudadano>().ToList();
         }
     }
 }

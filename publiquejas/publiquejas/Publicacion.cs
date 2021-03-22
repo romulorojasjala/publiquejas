@@ -33,16 +33,14 @@ namespace publiquejas
             _categoria = categoria;
         }
 
-        public bool cumple(List<TerminoDeBusqueda> terminos)
+        public object getPropertyValue(string propertyName)
         {
-            var cumpleTerminos = false;
-
-            terminos.ForEach(termino =>
+            switch(propertyName)
             {
-                cumpleTerminos = termino.cumple(this);
-            });
+                case "categoria": return _categoria;
+            }
 
-            return cumpleTerminos;
+            return null;
         }
     }
 }

@@ -100,6 +100,22 @@ namespace XUnitTestProject
             Assert.Empty(publicacionesEncontradas);
         }
 
+        [Fact]
+        public void DeberiaBuscarCiudadanosPorNombreDeUsuario()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+            List<TerminoDeBusqueda> terminosDeBusqueda = new List<TerminoDeBusqueda>
+            {
+                new TerminoTexto("UserName", "userName2")
+            };
+            var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
+            Assert.Single(ciudadanosEncontrados);
+            Assert.Equal("userName2", ciudadanosEncontrados.First().UserName);
+        }
+
     }
 
 }

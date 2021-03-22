@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace publiquejas
+﻿namespace publiquejas
 {
     public interface Buscable
     {
-        bool cumple(List<TerminoDeBusqueda> terminos);
+        object getPropertyValue(string propertyName);
     }
 }

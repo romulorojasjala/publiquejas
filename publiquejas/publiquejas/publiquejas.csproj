@@ -55,6 +55,7 @@
     <Compile Include="TerminoCategoria.cs" />
     <Compile Include="TerminoDeBusqueda.cs" />
     <Compile Include="Buscable.cs" />
+    <Compile Include="TerminoTexto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
