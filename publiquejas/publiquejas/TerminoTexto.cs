@@ -14,9 +14,9 @@ namespace publiquejas
             this._texto = texto;
         }
 
-        public List<Buscable> filtrar(List<Buscable> buscables)
+        public List<T> filtrar<T>(List<T> elementosAFiltrar) where T : Buscable
         {
-            return buscables.Where((buscable) =>
+            return elementosAFiltrar.Where((buscable) =>
             {
                 var texto = buscable.getPropertyValue(_campo);
                 return texto.Equals(_texto);

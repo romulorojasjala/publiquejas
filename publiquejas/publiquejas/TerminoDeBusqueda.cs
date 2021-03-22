@@ -6,6 +6,6 @@ namespace publiquejas
 {
     public interface TerminoDeBusqueda
     {
-        List<Buscable> filtrar(List<Buscable> elementosAFiltrar);
+        List<T> filtrar<T> (List<T> elementosAFiltrar) where T : Buscable;
     }
 }

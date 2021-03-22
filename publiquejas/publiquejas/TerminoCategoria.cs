@@ -13,7 +13,7 @@ namespace publiquejas
             this._categoria = categoria;
         }
 
-        public List<Buscable> filtrar(List<Buscable> elementosAFiltrar)
+        public List<T> filtrar<T>(List<T> elementosAFiltrar) where T : Buscable
         {
             return elementosAFiltrar.Where((buscable) =>
             {

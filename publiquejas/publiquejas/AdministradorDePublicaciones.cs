@@ -60,26 +60,38 @@ namespace publiquejas
 
         public List<Publicacion> BuscarPublicacion(List<TerminoDeBusqueda> terminosDeBusqueda)
         {
-            var publicaciones = _publicaciones.Cast<Buscable>().ToList();
+            var publicaciones = _publicaciones;
 
             terminosDeBusqueda.ForEach(termino =>
             {
                 publicaciones = termino.filtrar(publicaciones);
             });
 
-            return publicaciones.Cast<Publicacion>().ToList();
+            return publicaciones;
         }
 
         public List<Ciudadano> BuscarCiudadanos(List<TerminoDeBusqueda> terminosDeBusqueda)
         {
-            var ciudadanos = _ciudadanos.Cast<Buscable>().ToList();
+            var ciudadanos = _ciudadanos;
 
             terminosDeBusqueda.ForEach(termino =>
             {
-                ciudadanos = termino.filtrar(ciudadanos);
+                ciudadanos = termino.filtrar<Ciudadano>(ciudadanos);
             });
 
-            return ciudadanos.Cast<Ciudadano>().ToList();
+            return ciudadanos;
         }
+
+        //public List<T> Buscar<T>(List<TerminoDeBusqueda> terminosDeBusqueda, string tipo)
+        //{
+        //    var buscables = tipo == "PUBLICACION" ? _publicaciones.Cast<Buscable>().ToList() : _ciudadanos.Cast<Buscable>().ToList();
+
+        //    terminosDeBusqueda.ForEach(termino =>
+        //    {
+        //        buscables = termino.filtrar<T>(buscables);
+        //    });
+
+        //    return buscables;
+        //}
     }
 }
