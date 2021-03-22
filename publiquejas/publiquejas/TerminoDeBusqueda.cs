@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 namespace publiquejas
 {
-    public interface TerminoDeBusqueda
+    public interface TerminoDeBusqueda<T> where T : Buscable
     {
-        List<T> filtrar<T> (List<T> elementosAFiltrar) where T : Buscable;
+        List<T> filtrar(List<T> elementosAFiltrar);
     }
 }

@@ -58,7 +58,7 @@ namespace publiquejas
             return _categorias.Where(categoria => categoria.Nombre.Equals(nombreDeCategoria)).FirstOrDefault();
         }
 
-        public List<Publicacion> BuscarPublicacion(List<TerminoDeBusqueda> terminosDeBusqueda)
+        public List<Publicacion> BuscarPublicacion(List<TerminoDeBusqueda<Publicacion>> terminosDeBusqueda)
         {
             var publicaciones = _publicaciones;
 
@@ -70,7 +70,7 @@ namespace publiquejas
             return publicaciones;
         }
 
-        public List<Ciudadano> BuscarCiudadanos(List<TerminoDeBusqueda> terminosDeBusqueda)
+        public List<Ciudadano> BuscarCiudadanos(List<TerminoDeBusqueda<Ciudadano>> terminosDeBusqueda)
         {
             var ciudadanos = _ciudadanos;
 

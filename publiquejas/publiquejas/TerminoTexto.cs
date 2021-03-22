@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace publiquejas
 {
-    public class TerminoTexto : TerminoDeBusqueda
+    public class TerminoTexto<T> : TerminoDeBusqueda<T> where T : Buscable
     {
         private string _campo;
         private string _texto;
@@ -14,12 +14,17 @@ namespace publiquejas
             this._texto = texto;
         }
 
-        public List<T> filtrar<T>(List<T> elementosAFiltrar) where T : Buscable
+        public List<T> filtrar(List<T> elementosAFiltrar)
         {
             return elementosAFiltrar.Where((buscable) =>
             {
                 var texto = buscable.getPropertyValue(_campo);
-                return texto.Equals(_texto);
+                if (texto != null)
+                {
+                    return texto.Equals(_texto);
+                }
+
+                return false;
             }).ToList();
         }
     }

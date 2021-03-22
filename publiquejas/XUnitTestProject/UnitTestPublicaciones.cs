@@ -78,9 +78,9 @@ namespace XUnitTestProject
             CrearCiudadanos(administrador);
             CrearCategorias(administrador);
             CrearPublicaciones(administrador);
-            List<TerminoDeBusqueda> terminosDeBusqueda = new List<TerminoDeBusqueda>
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
             {
-                new TerminoCategoria("Categoria3")
+                new TerminoCategoria<Publicacion>("Categoria3")
             };
             var publicacionesEncontradas = administrador.BuscarPublicacion(terminosDeBusqueda);
             Assert.Equal(2, publicacionesEncontradas.Count);
@@ -94,8 +94,8 @@ namespace XUnitTestProject
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             CrearPublicaciones(administrador);
-            List<TerminoDeBusqueda> terminosDeBusqueda = new List<TerminoDeBusqueda>();
-            terminosDeBusqueda.Add(new TerminoCategoria("CategoriaNoExistente"));
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>();
+            terminosDeBusqueda.Add(new TerminoCategoria<Publicacion>("CategoriaNoExistente"));
             var publicacionesEncontradas = administrador.BuscarPublicacion(terminosDeBusqueda);
             Assert.Empty(publicacionesEncontradas);
         }
@@ -107,13 +107,28 @@ namespace XUnitTestProject
             CrearCiudadanos(administrador);
             CrearCategorias(administrador);
             CrearPublicaciones(administrador);
-            List<TerminoDeBusqueda> terminosDeBusqueda = new List<TerminoDeBusqueda>
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
             {
-                new TerminoTexto("UserName", "userName2")
+                new TerminoTexto<Ciudadano>("UserName", "userName2")
             };
             var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
             Assert.Single(ciudadanosEncontrados);
             Assert.Equal("userName2", ciudadanosEncontrados.First().UserName);
+        }
+
+        [Fact]
+        public void DeberiaBuscarCiudadanosYRetornarListaVaciaCuandoElCriterioTextoDeBusquedaEsInvalido()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
+            {
+                new TerminoTexto<Ciudadano>("CriterioNoValido", "userName2")
+            };
+            var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
+            Assert.Empty(ciudadanosEncontrados);
         }
     }
 }

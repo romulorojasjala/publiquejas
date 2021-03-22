@@ -29,9 +29,12 @@ namespace publiquejas
 
         public object getPropertyValue(string propertyName)
         {
-            switch (propertyName)
+            var property = GetType().GetProperties().ToList()
+                .Find((prop) => propertyName.ToLower().Equals(prop.Name.ToLower()));
+
+            if (property != null)
             {
-                case "UserName": return _userName;
+                return property.GetValue(this);
             }
 
             return null;

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace publiquejas
 {
-    public class TerminoCategoria : TerminoDeBusqueda
+    public class TerminoCategoria<T> : TerminoDeBusqueda<T> where T : Buscable
     {
         private string _categoria;
 
@@ -13,7 +13,7 @@ namespace publiquejas
             this._categoria = categoria;
         }
 
-        public List<T> filtrar<T>(List<T> elementosAFiltrar) where T : Buscable
+        public List<T> filtrar(List<T> elementosAFiltrar)
         {
             return elementosAFiltrar.Where((buscable) =>
             {
