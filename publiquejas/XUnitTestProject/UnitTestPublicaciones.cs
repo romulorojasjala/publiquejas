@@ -102,27 +102,33 @@ namespace XUnitTestProject
         }
 
         [Fact]
-        public void DeberiaBuscarPublicacionesPorCategoria()
+        public void BuscarPublicacionesPorCategoria()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             CrearCiudadanos(administrador);
             CrearCategorias(administrador);
             CrearPublicaciones(administrador);
+            var categoriaABuscar = administrador.Categorias.First().Nombre;
+            var publicacionesEnCategoria = administrador.Categorias.First().Publicaciones;
             var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
             {
-                new TerminoCategoria<Publicacion>("Categoria3")
+                new TerminoCategoria<Publicacion>(categoriaABuscar)
             };
             var publicacionesEncontradas = administrador.BuscarPublicacion(terminosDeBusqueda);
-            Assert.Equal(2, publicacionesEncontradas.Count);
+            Assert.Equal(publicacionesEnCategoria.Count, publicacionesEncontradas.Count);
 
-            Assert.Equal("Titulo3", publicacionesEncontradas.First().Titulo);
-            Assert.Equal("Titulo8", publicacionesEncontradas.Last().Titulo);
+            publicacionesEncontradas.ForEach((publicacion) =>
+            {
+                Assert.Equal(categoriaABuscar, publicacion.Categoria.Nombre);
+            });
         }
 
         [Fact]
-        public void DeberiaBuscarPublicacionesPorCategoriaYDevolverVacioSiNoExistenPublicaciones()
+        public void BuscarPublicacionesPorCategoriaNoExistente()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
             CrearPublicaciones(administrador);
             var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>();
             terminosDeBusqueda.Add(new TerminoCategoria<Publicacion>("CategoriaNoExistente"));
@@ -131,23 +137,25 @@ namespace XUnitTestProject
         }
 
         [Fact]
-        public void DeberiaBuscarCiudadanosPorNombreDeUsuario()
+        public void BuscarCiudadanosPorNombreDeUsuario()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             CrearCiudadanos(administrador);
             CrearCategorias(administrador);
             CrearPublicaciones(administrador);
+
+            var ciudadanoAEncontrar = administrador.Ciudadanos.Last();
             var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
             {
-                new TerminoTexto<Ciudadano>("UserName", "userName2")
+                new TerminoTexto<Ciudadano>("UserName", ciudadanoAEncontrar.UserName)
             };
             var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
             Assert.Single(ciudadanosEncontrados);
-            Assert.Equal("userName2", ciudadanosEncontrados.First().UserName);
+            Assert.Equal(ciudadanoAEncontrar.UserName, ciudadanosEncontrados.First().UserName);
         }
 
         [Fact]
-        public void DeberiaBuscarCiudadanosYRetornarListaVaciaCuandoElCriterioTextoDeBusquedaEsInvalido()
+        public void BuscarCiudadanosPorTerminoDeBusquedaInvalido()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             CrearCiudadanos(administrador);
