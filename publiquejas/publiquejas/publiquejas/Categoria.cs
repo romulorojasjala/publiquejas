@@ -7,10 +7,7 @@ namespace publiquejas
     {
         private string _nombre;
         private List<Publicacion> _publicaciones;
-
-        public string Nombre { get { return _nombre; } }
-        public IList<Publicacion> Publicaciones { get { return _publicaciones.AsReadOnly(); } }
-
+        
 
         public Categoria(string nombreCategoria)
         {
@@ -18,6 +15,7 @@ namespace publiquejas
             _publicaciones = new List<Publicacion>();
         }
 
+        public string Nombre { get { return _nombre; } }
 
         internal void AgregarPublicacion(Publicacion publicacion)
         {

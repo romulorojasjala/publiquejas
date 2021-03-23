@@ -24,13 +24,4 @@
     <ProjectReference Include="..\publiquejas\publiquejas.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Recursos\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Recursos\**\*.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
 </Project>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace publiquejas
 {
@@ -9,18 +11,12 @@ namespace publiquejas
         private List<Ciudadano> _ciudadanos;
         private List<Categoria> _categorias;
         private List<Publicacion> _publicaciones;
-        private List<Ranking> _rankings;
-
-        public IList<Ciudadano> Ciudadanos => _ciudadanos.AsReadOnly();
-        public IList<Publicacion> Publicaciones => _publicaciones.AsReadOnly();
-        public IList<Ranking> Rankings => _rankings.AsReadOnly();
 
         public AdministradorDePublicaciones()
         {
             _ciudadanos = new List<Ciudadano>();
             _categorias = new List<Categoria>();
             _publicaciones = new List<Publicacion>();
-            _rankings = new List<Ranking>();
         }
 
         public IList<Ciudadano> Ciudadanos => _ciudadanos.AsReadOnly();
@@ -49,15 +45,10 @@ namespace publiquejas
             Categoria categoria = BuscarCategoria(nombreDeCategoria);
 
             if (ciudadano != null && categoria != null) {
-                Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano, categoria);
+                Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano);
                 categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
             }
-        }
-
-        public void GenerarRanking(string criterio)
-        {
-            Criterios criterios = (Criterios)Enum.Parse(typeof(Criterios), criterio);
         }
 
         private Ciudadano BuscarCiudadano(string userNameDeCiudadano)
@@ -70,28 +61,5 @@ namespace publiquejas
             return _categorias.Where(categoria => categoria.Nombre.Equals(nombreDeCategoria)).FirstOrDefault();
         }
 
-        public List<Publicacion> BuscarPublicacion(List<TerminoDeBusqueda<Publicacion>> terminosDeBusqueda)
-        {
-            var publicaciones = _publicaciones;
-
-            terminosDeBusqueda.ForEach(termino =>
-            {
-                publicaciones = termino.filtrar(publicaciones);
-            });
-
-            return publicaciones;
-        }
-
-        public List<Ciudadano> BuscarCiudadanos(List<TerminoDeBusqueda<Ciudadano>> terminosDeBusqueda)
-        {
-            var ciudadanos = _ciudadanos;
-
-            terminosDeBusqueda.ForEach(termino =>
-            {
-                ciudadanos = termino.filtrar(ciudadanos);
-            });
-
-            return ciudadanos;
-        }
     }
 }
