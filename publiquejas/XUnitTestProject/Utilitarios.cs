@@ -13,10 +13,7 @@ namespace XUnitTestProject
     {
         public static ModeloCiudadano[] ObtenerListaModeloCiudadano()
         {
-            string assemblyPath = Path.GetDirectoryName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-            string path = Path.GetFullPath(Path.Combine(assemblyPath, @"..\..\..\"));
-
-            return ReadCsv($"{path}FakeNameGenerator.csv");
+            return ReadCsv(@"Recursos/FakeNameGenerator.csv");
         }
 
         public static ModeloCiudadano[] ObtenerListaModeloCiudadano(string csvPath)

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace publiquejas
 {
@@ -45,7 +43,7 @@ namespace publiquejas
             Categoria categoria = BuscarCategoria(nombreDeCategoria);
 
             if (ciudadano != null && categoria != null) {
-                Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano);
+                Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano, categoria);
                 categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
             }
@@ -61,5 +59,28 @@ namespace publiquejas
             return _categorias.Where(categoria => categoria.Nombre.Equals(nombreDeCategoria)).FirstOrDefault();
         }
 
+        public List<Publicacion> BuscarPublicacion(List<TerminoDeBusqueda<Publicacion>> terminosDeBusqueda)
+        {
+            var publicaciones = _publicaciones;
+
+            terminosDeBusqueda.ForEach(termino =>
+            {
+                publicaciones = termino.filtrar(publicaciones);
+            });
+
+            return publicaciones;
+        }
+
+        public List<Ciudadano> BuscarCiudadanos(List<TerminoDeBusqueda<Ciudadano>> terminosDeBusqueda)
+        {
+            var ciudadanos = _ciudadanos;
+
+            terminosDeBusqueda.ForEach(termino =>
+            {
+                ciudadanos = termino.filtrar(ciudadanos);
+            });
+
+            return ciudadanos;
+        }
     }
 }

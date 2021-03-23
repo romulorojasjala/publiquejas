@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace publiquejas
 {
-    public class Ciudadano
+    public class Ciudadano : Buscable
     {
         private string _userName;
         private string _nombre;
@@ -25,6 +25,19 @@ namespace publiquejas
             _apellido = apellido;
             _fechaDeNacimiento = fechaDeNacimiento;
             _ubicacion = ubicacion;
+        }
+
+        public object getPropertyValue(string propertyName)
+        {
+            var property = GetType().GetProperties().ToList()
+                .Find((prop) => propertyName.ToLower().Equals(prop.Name.ToLower()));
+
+            if (property != null)
+            {
+                return property.GetValue(this);
+            }
+
+            return null;
         }
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using Xunit;
 using publiquejas;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace XUnitTestProject
@@ -97,6 +99,74 @@ namespace XUnitTestProject
             administrador = CrearCategorias(administrador, 2);
             administrador = CrearPublicaciones(administrador, 15);
             Assert.True(administrador.Publicaciones.Count > 0, "la lista de publicaciones esta vacia");
+        }
+
+        [Fact]
+        public void BuscarPublicacionesPorCategoria()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+            var categoriaABuscar = administrador.Categorias.First().Nombre;
+            var publicacionesEnCategoria = administrador.Categorias.First().Publicaciones;
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
+            {
+                new TerminoCategoria<Publicacion>(categoriaABuscar)
+            };
+            var publicacionesEncontradas = administrador.BuscarPublicacion(terminosDeBusqueda);
+            Assert.Equal(publicacionesEnCategoria.Count, publicacionesEncontradas.Count);
+
+            publicacionesEncontradas.ForEach((publicacion) =>
+            {
+                Assert.Equal(categoriaABuscar, publicacion.Categoria.Nombre);
+            });
+        }
+
+        [Fact]
+        public void BuscarPublicacionesPorCategoriaNoExistente()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>();
+            terminosDeBusqueda.Add(new TerminoCategoria<Publicacion>("CategoriaNoExistente"));
+            var publicacionesEncontradas = administrador.BuscarPublicacion(terminosDeBusqueda);
+            Assert.Empty(publicacionesEncontradas);
+        }
+
+        [Fact]
+        public void BuscarCiudadanosPorNombreDeUsuario()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+
+            var ciudadanoAEncontrar = administrador.Ciudadanos.Last();
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
+            {
+                new TerminoTexto<Ciudadano>("UserName", ciudadanoAEncontrar.UserName)
+            };
+            var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
+            Assert.Single(ciudadanosEncontrados);
+            Assert.Equal(ciudadanoAEncontrar.UserName, ciudadanosEncontrados.First().UserName);
+        }
+
+        [Fact]
+        public void BuscarCiudadanosPorTerminoDeBusquedaInvalido()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
+            {
+                new TerminoTexto<Ciudadano>("CriterioNoValido", "userName2")
+            };
+            var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
+            Assert.Empty(ciudadanosEncontrados);
         }
     }
 }
