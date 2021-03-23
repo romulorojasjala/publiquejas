@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace publiquejas
 {
-    public interface ICriterio
+    public interface IExpression
     {
-        int Calcular(Publicacion publicacion);
+        Criterio Interpretar(string token);
     }
 }

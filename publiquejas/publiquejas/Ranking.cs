@@ -8,14 +8,14 @@ namespace publiquejas
 {
     public class Ranking
     {
-        private IList<ICriterio> _criterios;
+        private IList<IExpression> _criterios;
         //private DateTime _fechaCalculo;
         private int _cantidad;
         private SortedDictionary<int, Publicacion> _publicaciones;
 
         public SortedDictionary<int, Publicacion> Publicaciones => _publicaciones;
 
-        public Ranking(IList<ICriterio> criterios, int cantidad)
+        public Ranking(IList<IExpression> criterios, int cantidad)
         {
             _criterios = criterios;
             _cantidad = cantidad;
@@ -28,9 +28,9 @@ namespace publiquejas
             foreach(Publicacion publicacion in  publicaciones)
             {
                 int valoracion = 0;
-                foreach(ICriterio criterio in _criterios)
+                foreach(IExpression criterio in _criterios)
                 {
-                    valoracion += criterio.Calcular(publicacion);
+                    valoracion += criterio.Interpretar(publicacion);
                 }
                 this._publicaciones.Add(valoracion, publicacion);
                 if (this._publicaciones.Count() >= this._cantidad)

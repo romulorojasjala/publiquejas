@@ -52,21 +52,6 @@ namespace XUnitTestProject
             return admin;
         }
 
-        internal AdministradorDePublicaciones CrearPublicaciones(AdministradorDePublicaciones admin, int cantidad)
-        {
-            admin.AgregarPublicacion("userName", "Titulo", "Contenido", "Categoria");
-            admin.AgregarPublicacion("userName", "Titulo2", "Contenido2", "Categoria2");
-            admin.AgregarPublicacion("userName", "Titulo3", "Contenido3", "Categoria3");
-            admin.AgregarPublicacion("userName", "Titulo4", "Contenido4", "Categoria4");
-            admin.AgregarPublicacion("userName", "Titulo5", "Contenido5", "Categoria5");
-
-            admin.AgregarPublicacion("userName2", "Titulo", "Contenido", "Categoria");
-            admin.AgregarPublicacion("userName2", "Titulo2", "Contenido2", "Categoria2");
-            admin.AgregarPublicacion("userName2", "Titulo3", "Contenido3", "Categoria3");
-
-            return admin;
-        }
-
         internal List<string> VotarPorPublicaciones(AdministradorDePublicaciones admin)
         {
             Random _random = new Random();
