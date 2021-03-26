@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace publiquejas
 {
-    class LikesCriterio : ICriterio
+    public class LikesCriterio : ICriterio
     {
         public LikesCriterio() {}
 

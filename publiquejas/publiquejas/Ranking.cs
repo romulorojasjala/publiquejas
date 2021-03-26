@@ -13,7 +13,7 @@ namespace publiquejas
         private int _cantidad;
         private SortedDictionary<int, Publicacion> _publicaciones;
 
-        public SortedDictionary<int, Publicacion> Publicaciones => _publicaciones;
+        public List<Publicacion> Publicaciones => _publicaciones.Values.ToList();
 
         public Ranking(IList<ICriterio> criterios, int cantidad)
         {
