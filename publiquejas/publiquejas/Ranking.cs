@@ -6,38 +6,26 @@ using System.Threading.Tasks;
 
 namespace publiquejas
 {
-    public class Ranking
+    public class Ranking<T> where T : IRankeable
     {
-        private IList<ICriterio> _criterios;
-        //private DateTime _fechaCalculo;
+        private Criterio<T> _criterio;
         private int _cantidad;
-        private SortedDictionary<int, Publicacion> _publicaciones;
+        private List<T> _ranking;
 
-        public List<Publicacion> Publicaciones => _publicaciones.Values.ToList();
+        public IList<T> ElementosRanking => _ranking;
 
-        public Ranking(IList<ICriterio> criterios, int cantidad)
+        public Ranking(Criterio<T> criterio, int cantidad)
         {
-            _criterios = criterios;
+            _criterio = criterio;
             _cantidad = cantidad;
-            _publicaciones = new SortedDictionary<int, Publicacion>(Comparer<int>.Create((x, y) => y.CompareTo(x)));
+            
         }
 
-        public void CalcularRanking(List<Publicacion> publicaciones)
+        public void CalcularRanking(List<T> elementosARankear)
         {
-            _publicaciones.Clear();
-            foreach(Publicacion publicacion in  publicaciones)
-            {
-                int valoracion = 0;
-                foreach(ICriterio criterio in _criterios)
-                {
-                    valoracion += criterio.Calcular(publicacion);
-                }
-                this._publicaciones.Add(valoracion, publicacion);
-                if (this._publicaciones.Count() >= this._cantidad)
-                {
-                    break;
-                }
-            }
+            _ranking = new List<T>(elementosARankear);
+            _ranking.Sort(_criterio);
+            _ranking = _ranking.Take(_cantidad).ToList();
         }
     }
 }

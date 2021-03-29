@@ -52,25 +52,13 @@ namespace XUnitTestProject
             return admin;
         }
 
-        internal List<Publicacion> VotarPorPublicaciones(AdministradorDePublicaciones admin)
-        {
-            Random _random = new Random();
-            SortedDictionary<int, Publicacion> resultado = new SortedDictionary<int, Publicacion>(Comparer<int>.Create((x, y) => y.CompareTo(x)));
-            foreach(var publicacion in admin.Publicaciones) {
-                int numeroLikes = _random.Next(1, 100);
-                publicacion.Likes = numeroLikes;
-                resultado.Add(numeroLikes, publicacion);
-            }
-            return resultado.Values.ToList();
-        }
-
         internal AdministradorDePublicaciones CrearPublicaciones(AdministradorDePublicaciones admin, int numeroDePublicaciones = 1)
         {
             Random randon = new Random();
 
             for (int i = 0; i < numeroDePublicaciones; i++)
             {
-                string randomValue = GeneradorDeCadenas(4);
+                string randomValue = GeneradorDeCadenas(randon.Next(10));
                 string titulo = $"Titulo{randomValue}";
                 string contenido = $"Contenido{randomValue}";
 
@@ -83,6 +71,45 @@ namespace XUnitTestProject
             return admin;
         }
 
+        internal List<Publicacion> GenerarListaPorLikes(AdministradorDePublicaciones admin, int cantidad, bool highToLow = false)
+        {
+            Random _random = new Random();
+            admin.Publicaciones.ToList().ForEach(p => {
+                var numeroLikes = _random.Next(1, 100);
+                p.Likes = numeroLikes;
+            });
+
+            var publicacionesPorLikes = new List<Publicacion>(admin.Publicaciones);
+            publicacionesPorLikes.Sort((p1, p2) => {
+                if (highToLow)
+                {
+                    return p2.Likes.CompareTo(p1.Likes);
+                }
+                else
+                {
+                    return p1.Likes.CompareTo(p2.Likes);
+                }
+            });
+
+            return publicacionesPorLikes.Take(cantidad).ToList();
+        }
+
+        internal List<Publicacion> ObtenerListaOrdenadaPorTitulo(AdministradorDePublicaciones admin, int cantidad, bool highToLow = false)
+        {
+            var publicacionesPorTitulo = new List<Publicacion>(admin.Publicaciones);
+            publicacionesPorTitulo.Sort((p1, p2) => {
+                if (highToLow)
+                {
+                    return p2.Titulo.Length.CompareTo(p1.Titulo.Length);
+                }
+                else
+                {
+                    return p1.Titulo.Length.CompareTo(p2.Titulo.Length);
+                }
+            });
+
+            return publicacionesPorTitulo.Take(cantidad).ToList();
+        }
 
         [Fact]
         public void AgregarCiudadano()
@@ -182,18 +209,122 @@ namespace XUnitTestProject
         }
 
         [Fact]
-        public void GenerarRankingPorLiks()
+        public void GenerarRankingPorLikesMayorAMenor()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             CrearCiudadanos(administrador);
             CrearCategorias(administrador);
-            administrador = CrearPublicaciones(administrador, 10);
-            List<Publicacion> ResultadoVotacion = VotarPorPublicaciones(administrador);
-            List<ICriterio> criterios = new List<ICriterio>();
-            criterios.Add(new LikesCriterio());
-            administrador.GenerarRanking(criterios, 10);
+            administrador = CrearPublicaciones(administrador, 20);
+            List<Publicacion> ResultadoVotacion = GenerarListaPorLikes(administrador, 10, true);
+
+            var criterio = new Criterio<Publicacion>()
+                .AgregarPropiedad("Likes")
+                .AgregarAccion(AccionCriterio.Mayor)
+                .AgregarTipo(TipoCriterio.Cantidad);
+
+            administrador.GenerarRanking(criterio, 10);
+
             Assert.True(administrador.Rankings.Count > 0, "La lista de rankings esta vacia");
-            Assert.Equal(ResultadoVotacion, administrador.Rankings[0].Publicaciones);
+            Assert.Equal(ResultadoVotacion, administrador.Rankings[0].ElementosRanking);
+            
         }
+
+        [Fact]
+        public void GenerarRankingPorLikesMenorAMayor()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            administrador = CrearPublicaciones(administrador, 20);
+            List<Publicacion> ResultadoVotacion = GenerarListaPorLikes(administrador, 10);
+
+            var criterio = new Criterio<Publicacion>()
+                .AgregarPropiedad("Likes")
+                .AgregarAccion(AccionCriterio.Menor)
+                .AgregarTipo(TipoCriterio.Cantidad);
+
+            administrador.GenerarRanking(criterio, 10);
+
+            Assert.True(administrador.Rankings.Count > 0, "La lista de rankings esta vacia");
+            Assert.Equal(ResultadoVotacion, administrador.Rankings[0].ElementosRanking);
+
+        }
+
+        [Fact]
+        public void GenerarRankingLongitudDeNombreEnTituloMenorAMayor()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            administrador = CrearPublicaciones(administrador, 20);
+
+            List<Publicacion> ResultadoTitulos = ObtenerListaOrdenadaPorTitulo(administrador, 10);
+
+            var criterio = new Criterio<Publicacion>()
+                .AgregarPropiedad("Titulo")
+                .AgregarAccion(AccionCriterio.Menor)
+                .AgregarTipo(TipoCriterio.Longitud);
+
+            administrador.GenerarRanking(criterio, 10);
+
+            Assert.True(administrador.Rankings.Count > 0, "La lista de rankings esta vacia");
+            Assert.Equal(ResultadoTitulos, administrador.Rankings[0].ElementosRanking);
+        }
+
+        [Fact]
+        public void GenerarRankingLongitudDeNombreEnTituloMayorAMenor()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            administrador = CrearPublicaciones(administrador, 20);
+
+            List<Publicacion> ResultadoTitulos = ObtenerListaOrdenadaPorTitulo(administrador, 10, true);
+
+            var criterio = new Criterio<Publicacion>()
+                .AgregarPropiedad("Titulo")
+                .AgregarAccion(AccionCriterio.Mayor)
+                .AgregarTipo(TipoCriterio.Longitud);
+
+            administrador.GenerarRanking(criterio, 10);
+
+            Assert.True(administrador.Rankings.Count > 0, "La lista de rankings esta vacia");
+            Assert.Equal(ResultadoTitulos, administrador.Rankings[0].ElementosRanking);
+        }
+
+        //[Fact]
+        //public void GenerarRankingLongitudCategoriaMasTituloMayorAMenor()
+        //{
+        //    AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+        //    CrearCiudadanos(administrador);
+        //    CrearCategorias(administrador);
+        //    administrador = CrearPublicaciones(administrador, 20);
+
+        //    List<Publicacion> ResultadoTitulos = ObtenerListaOrdenadaPorTitulo(administrador, 10, true);
+
+        //    var criterio = new Criterio<Publicacion>();
+        //    var propiedadCompuesta = new PropiedadCompuesta();
+        //    propiedadCompuesta.AgregarPropiedad("Categoria.Nombre");
+        //    propiedadCompuesta.AgregarPropiedad("Titulo");
+        //    propiedadCompuesta.AgregarTransformacion(TransformacionCriterio.Concatenacion);
+        //    criterio.AgregarPropiedad(propiedadCompuesta);
+        //    criterio.AgregarAccion(AccionCriterio.Mayor)
+        //        .AgregarTipo(TipoCriterio.Longitud);
+
+
+            //var criterio = new Criterio<Publicacion>()
+            //    .AgregarPropiedad("Categoria.Nombre")
+            //    .AgregarPropiedad("Titulo")
+            //    .AgregarTransformacionPropiedad(TransformacionCriterio.Concatenacion)
+            //    .AgregarAccion(AccionCriterio.Mayor)
+            //    .AgregarTipo(TipoCriterio.Longitud);
+
+            //administrador.GenerarRanking(criterio, 10);
+
+        //    Console.WriteLine("Mayor a menor");
+        //    administrador.Rankings[0].ElementosRanking.ToList().ForEach((p) => Console.WriteLine(p.Titulo + " - " + p.Titulo.Length));
+        //    Console.WriteLine("------");
+        //    ResultadoTitulos.ForEach((p) => Console.WriteLine(p.Titulo + " - " + p.Titulo.Length));
+        //}
     }
 }

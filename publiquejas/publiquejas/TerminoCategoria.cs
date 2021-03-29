@@ -17,7 +17,7 @@ namespace publiquejas
         {
             return elementosAFiltrar.Where((buscable) =>
             {
-                var categoria = buscable.getPropertyValue("categoria") as Categoria;
+                var categoria = buscable.getPropertyValue("Categoria") as Categoria;
                 return categoria.Nombre.Equals(_categoria);
             }).ToList();
         }

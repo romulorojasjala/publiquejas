@@ -9,11 +9,11 @@ namespace publiquejas
         private List<Ciudadano> _ciudadanos;
         private List<Categoria> _categorias;
         private List<Publicacion> _publicaciones;
-        private List<Ranking> _rankings;
+        private List<Ranking<Publicacion>> _rankings;
 
         public IList<Ciudadano> Ciudadanos => _ciudadanos.AsReadOnly();
         public IList<Publicacion> Publicaciones => _publicaciones.AsReadOnly();
-        public IList<Ranking> Rankings => _rankings.AsReadOnly();
+        public IList<Ranking<Publicacion>> Rankings => _rankings.AsReadOnly();
         public IList<Categoria> Categorias => _categorias.AsReadOnly();
 
         public AdministradorDePublicaciones()
@@ -21,7 +21,7 @@ namespace publiquejas
             _ciudadanos = new List<Ciudadano>();
             _categorias = new List<Categoria>();
             _publicaciones = new List<Publicacion>();
-            _rankings = new List<Ranking>();
+            _rankings = new List<Ranking<Publicacion>>();
         }
 
         public void AgregarCiudadano(string userName, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion) 
@@ -46,7 +46,7 @@ namespace publiquejas
             Categoria categoria = BuscarCategoria(nombreDeCategoria);
 
             if (ciudadano != null && categoria != null) {
-                Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano);
+                Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano, categoria);
                 categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
             }
@@ -86,9 +86,9 @@ namespace publiquejas
             return ciudadanos;
         }
 
-        public void GenerarRanking(List<ICriterio> terminos, int cantidad)
+        public void GenerarRanking(Criterio<Publicacion> criterio, int cantidad)
         {
-            Ranking ranking = new Ranking(terminos, cantidad);
+            Ranking<Publicacion> ranking = new Ranking<Publicacion>(criterio, cantidad);
             ranking.CalcularRanking(_publicaciones);
             _rankings.Add(ranking);
         }

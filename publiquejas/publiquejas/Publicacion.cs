@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace publiquejas
 {
-    public class Publicacion : Buscable
+    public class Publicacion : Buscable, IRankeable
     {
         private string _titulo;
         private string _contenido;
@@ -44,6 +44,20 @@ namespace publiquejas
             if (property != null)
             {
                 return property.GetValue(this);
+            }
+
+            return null;
+        }
+
+        public Type GetPropertyType(string propiedad)
+        {
+            var property = GetType().GetProperties().ToList()
+                .Find((prop) => propiedad.ToLower().Equals(prop.Name.ToLower()));
+
+            if (property != null)
+            {
+                //Console.WriteLine(property.PropertyType.Name);
+                return property.PropertyType;
             }
 
             return null;
