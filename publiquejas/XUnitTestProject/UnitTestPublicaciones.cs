@@ -81,6 +81,17 @@ namespace XUnitTestProject
             Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
         }
 
+        // AgregarCiudadanoConNombreDeUsuarioRepetido.
+
+        // AgregarCiudadanoConMenosDe18Años.
+
+        // ActualizarLugarDeCiudadano.
+
+        // EliminarCiudadanoYAnonimizarElCiudadanoEnLasPublicacionesCategoriasComentariosCreadas.
+        // En realidad seria eliminar datos personales del usuario y reemplando su nombre de usuario por uno generico.
+
+        // EliminarCiudadanoNoExistente.
+
         [Fact]
         public void AgregarPublicacion()
         {
@@ -136,6 +147,16 @@ namespace XUnitTestProject
             Assert.Empty(publicacionesEncontradas);
         }
 
+        // ***MODIFICAR LAS PUBLICACIONES DE TAL FORMA QUE NO USEN CATEGORIAS COMO TEXTO, DEBEN USAR CATEGORIAS COMO OBJETOS***
+
+        // ModificarTituloY/OContenidoDePublicacionQueAunNoFueRankeadaOComentada.
+
+        // EliminarPublicacionesQueNoTienenComentariosYNoEstanEnUnRanking.
+
+        // AgregarOQuitarCategoriasEnPublicacionesYaCreadas.
+
+        // Votar a favor o en contra de publicaciones, la votacion debe ser realizada por un ciudadano valido.
+
         [Fact]
         public void BuscarCiudadanosPorNombreDeUsuario()
         {
@@ -169,4 +190,18 @@ namespace XUnitTestProject
             Assert.Empty(ciudadanosEncontrados);
         }
     }
+
+    // AgregarComentarios.
+
+    // AgregarComentarioAPublicacionNoExistente.
+
+    // EliminarComentarios.
+
+    // ActualizarComentarios.
+
+    // AgregarCategorias.
+
+    // ModificarCategorias.
+
+    // EliminarCategorias.
 }
