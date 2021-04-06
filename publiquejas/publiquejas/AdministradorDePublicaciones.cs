@@ -27,6 +27,11 @@ namespace publiquejas
             _ciudadanos.Add(ciudadano);
         }
 
+        public void ActualizarUbicacionCiudadano(string userName, string nuevaUbicacion)
+        {
+            Ciudadano ciudadano = BuscarCiudadano(userName);
+            ciudadano.ActualizarUbicacion(ubicacion: nuevaUbicacion);
+        }
         public void AgregarCategoria(string nombreDeCategoria)
         {
             Categoria categoria = BuscarCategoria(nombreDeCategoria);

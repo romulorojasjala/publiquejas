@@ -81,13 +81,30 @@ namespace XUnitTestProject
             Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
         }
 
-        // AgregarCiudadanoConNombreDeUsuarioRepetido.
+        // AgregarCiudadanoConNombreDeUsuarioRepetido. Daniela
 
-        // AgregarCiudadanoConMenosDe18Años.
+        // AgregarCiudadanoConMenosDe18Años. Carlos 
 
-        // ActualizarLugarDeCiudadano.
+        // ActualizarLugarDeCiudadano. Carlos
+        [Fact]
+        public void ActualizarLugarDeCiudadano()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
+            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+            administrador.ActualizarUbicacionCiudadano("userName", "newLugar");
 
-        // EliminarCiudadanoYAnonimizarElCiudadanoEnLasPublicacionesCategoriasComentariosCreadas.
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
+            {
+                new TerminoTexto<Ciudadano>("UserName", "userName")
+            };
+            var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
+            Assert.Single(ciudadanosEncontrados);
+            Assert.Equal("newLugar", ciudadanosEncontrados.First().Ubicacion);
+        }
+
+        // EliminarCiudadanoYAnonimizarElCiudadanoEnLasPublicacionesCategoriasComentariosCreadas. Maria
         // En realidad seria eliminar datos personales del usuario y reemplando su nombre de usuario por uno generico.
 
         // EliminarCiudadanoNoExistente.
@@ -147,13 +164,13 @@ namespace XUnitTestProject
             Assert.Empty(publicacionesEncontradas);
         }
 
-        // ***MODIFICAR LAS PUBLICACIONES DE TAL FORMA QUE NO USEN CATEGORIAS COMO TEXTO, DEBEN USAR CATEGORIAS COMO OBJETOS***
+        // ***MODIFICAR LAS PUBLICACIONES DE TAL FORMA QUE NO USEN CATEGORIAS COMO TEXTO, DEBEN USAR CATEGORIAS COMO OBJETOS*** Erick
 
         // ModificarTituloY/OContenidoDePublicacionQueAunNoFueRankeadaOComentada.
 
         // EliminarPublicacionesQueNoTienenComentariosYNoEstanEnUnRanking.
 
-        // AgregarOQuitarCategoriasEnPublicacionesYaCreadas.
+        // AgregarOQuitarCategoriasEnPublicacionesYaCreadas. Ariel
 
         // Votar a favor o en contra de publicaciones, la votacion debe ser realizada por un ciudadano valido.
 
@@ -191,9 +208,9 @@ namespace XUnitTestProject
         }
     }
 
-    // AgregarComentarios.
+    // AgregarComentarios. Emilio
 
-    // AgregarComentarioAPublicacionNoExistente.
+    // AgregarComentarioAPublicacionNoExistente. Martin
 
     // EliminarComentarios.
 
