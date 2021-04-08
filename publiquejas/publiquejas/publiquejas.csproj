@@ -79,6 +79,7 @@
     <Compile Include="TerminoDeBusqueda.cs" />
     <Compile Include="Buscable.cs" />
     <Compile Include="TerminoTexto.cs" />
+    <Compile Include="NombreDeUsuarioDuplicadoDeCiudadano.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
