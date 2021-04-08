@@ -130,7 +130,7 @@ namespace XUnitTestProject
 
             publicacionesEncontradas.ForEach((publicacion) =>
             {
-                Assert.Equal(categoriaABuscar, publicacion.Categoria.Nombre);
+                Assert.Equal(categoriaABuscar, publicacion.Categorias[0].Nombre);
             });
         }
 
@@ -156,6 +156,59 @@ namespace XUnitTestProject
         // AgregarOQuitarCategoriasEnPublicacionesYaCreadas.
 
         // Votar a favor o en contra de publicaciones, la votacion debe ser realizada por un ciudadano valido.
+
+        [Fact]
+        public void AgregarCategoriaEnPublicacionExistente()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+
+            var publicacionEncontrar = administrador.Publicaciones.First();
+
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
+            {
+                new TerminoTexto<Publicacion>("Titulo", publicacionEncontrar.Titulo)
+            };
+
+            var publicacionEncontrada = administrador.BuscarPublicacion(terminosDeBusqueda).First();
+
+
+            var nuevaCategoria =new Categoria("Categoria Nueva") ;
+
+            publicacionEncontrada.agregarCategoria(nuevaCategoria);
+            
+            Assert.True(publicacionEncontrada.Categorias.Where(cat => cat.Nombre.Equals(nuevaCategoria.Nombre)).ToList().Count > 0);
+        }
+
+        [Fact]
+        public void QuitarCategoriaEnPublicacionExistente()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+
+            var publicacionEncontrar = administrador.Publicaciones.First();
+
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
+            {
+                new TerminoTexto<Publicacion>("Titulo", publicacionEncontrar.Titulo)
+            };
+
+            var publicacionEncontrada = administrador.BuscarPublicacion(terminosDeBusqueda).First();
+
+            var publicacionAEliminar = "Publicacion a Eliminar";            
+
+            var nuevaCategoria = new Categoria(publicacionAEliminar);
+
+            publicacionEncontrada.agregarCategoria(nuevaCategoria);
+
+            publicacionEncontrada.eliminarCategoria(publicacionAEliminar);            
+
+            Assert.True(publicacionEncontrada.Categorias.Where(cat => cat.Nombre.Equals(nuevaCategoria.Nombre)).Count() == 0);
+        }
 
         [Fact]
         public void BuscarCiudadanosPorNombreDeUsuario()

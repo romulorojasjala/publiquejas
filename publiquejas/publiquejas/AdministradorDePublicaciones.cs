@@ -33,7 +33,7 @@ namespace publiquejas
             if (categoria == null)
             {
                 categoria = new Categoria(nombreDeCategoria);
-                _categorias.Add(categoria);
+                _categorias.Add(categoria);                
             }
         }
 
