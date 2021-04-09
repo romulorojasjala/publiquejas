@@ -206,7 +206,7 @@ namespace XUnitTestProject
             administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
             administrador.VotarPublicacion(publicacion1, ciudadano2, TipoVoto.VotoPositivo);
 
-            Assert.Equal(2, publicacion1.GetVotos(TipoVoto.VotoPositivo).Count());
+            Assert.Equal(2, administrador.GetVotosDePublicacion(publicacion1, TipoVoto.VotoPositivo).Count());
         }
 
         [Fact]
@@ -224,7 +224,7 @@ namespace XUnitTestProject
             administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
             administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
 
-            Assert.Empty(publicacion1.GetVotos());
+            Assert.Empty(administrador.GetVotosDePublicacion(publicacion1));
         }
 
         [Fact]
@@ -242,8 +242,8 @@ namespace XUnitTestProject
             administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
             administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoNegativo);
 
-            Assert.Single(publicacion1.GetVotos());
-            Assert.Equal(TipoVoto.VotoNegativo, publicacion1.GetVotos(TipoVoto.VotoNegativo).FirstOrDefault().TipoVoto);
+            Assert.Single(administrador.GetVotosDePublicacion(publicacion1));
+            Assert.Equal(TipoVoto.VotoNegativo, administrador.GetVotosDePublicacion(publicacion1, TipoVoto.VotoNegativo).FirstOrDefault().TipoVoto);
         }
     }
 
