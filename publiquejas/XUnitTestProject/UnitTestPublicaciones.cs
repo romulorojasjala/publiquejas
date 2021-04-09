@@ -4,6 +4,7 @@ using publiquejas;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using publiquejas.Votos;
 
 namespace XUnitTestProject
 {
@@ -200,6 +201,61 @@ namespace XUnitTestProject
             };
             var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
             Assert.Empty(ciudadanosEncontrados);
+        }
+
+        [Fact]
+        public void VotarAFavorPorUnaPublicacion()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador, 10, 20);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+
+            var publicacion1 = administrador.Publicaciones.FirstOrDefault();
+            var ciudadano1 = administrador.Ciudadanos.FirstOrDefault();
+            var ciudadano2 = administrador.Ciudadanos[1];
+
+            administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
+            administrador.VotarPublicacion(publicacion1, ciudadano2, TipoVoto.VotoPositivo);
+
+            Assert.Equal(2, administrador.GetVotosDePublicacion(publicacion1, TipoVoto.VotoPositivo).Count());
+        }
+
+        [Fact]
+        public void VotarPorUnaPublicacionPostivamenteDosVecesDeberiaQuedarSinVoto()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador, 10, 20);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+
+            var publicacion1 = administrador.Publicaciones.FirstOrDefault();
+            var ciudadano1 = administrador.Ciudadanos.FirstOrDefault();
+            var ciudadano2 = administrador.Ciudadanos[1];
+
+            administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
+            administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
+
+            Assert.Empty(administrador.GetVotosDePublicacion(publicacion1));
+        }
+
+        [Fact]
+        public void VotarPorUnaPublicacionPostivamentePrimeroYLuegoNegativamenteDeberiaQuedarConElUltimoTipoDeVoto()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador, 10, 20);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+
+            var publicacion1 = administrador.Publicaciones.FirstOrDefault();
+            var ciudadano1 = administrador.Ciudadanos.FirstOrDefault();
+            var ciudadano2 = administrador.Ciudadanos[1];
+
+            administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
+            administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoNegativo);
+
+            Assert.Single(administrador.GetVotosDePublicacion(publicacion1));
+            Assert.Equal(TipoVoto.VotoNegativo, administrador.GetVotosDePublicacion(publicacion1, TipoVoto.VotoNegativo).FirstOrDefault().TipoVoto);
         }
     }
 
