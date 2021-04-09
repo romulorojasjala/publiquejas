@@ -49,6 +49,19 @@ namespace publiquejas
             }
         }
 
+        public void EliminarPublicacion(string nombreCiudadano, string titulo, string contenido, string nombreDeCategoria)
+        {
+             var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>()
+             {
+                  new TerminoCategoria<Publicacion>(nombreDeCategoria),
+                  new TerminoCiudadano<Publicacion>(nombreCiudadano),
+                  new TerminoTexto<Publicacion>("titulo", titulo),
+                  new TerminoTexto<Publicacion>("contenido", contenido)
+             };
+             Publicacion publicacion = BuscarPublicacion(terminosDeBusqueda).FirstOrDefault();
+             _publicaciones.Remove(publicacion);
+        }
+
         private Ciudadano BuscarCiudadano(string userNameDeCiudadano)
         {
             return _ciudadanos.Where(ciudadano => ciudadano.UserName.Equals(userNameDeCiudadano)).FirstOrDefault();
@@ -81,6 +94,24 @@ namespace publiquejas
             });
 
             return ciudadanos;
+        }
+
+        public void AgregarComentario(string nombreCiudadano, string tituloPublicacion, string contenidoPublicacion, string nombreDeCategoria, string contenidoComentario)
+        {
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>()
+            {
+                  new TerminoCategoria<Publicacion>(nombreDeCategoria),
+                  new TerminoCiudadano<Publicacion>(nombreCiudadano),
+                  new TerminoTexto<Publicacion>("titulo", tituloPublicacion),
+                  new TerminoTexto<Publicacion>("contenido", contenidoPublicacion)
+            };
+            Publicacion publicacion = BuscarPublicacion(terminosDeBusqueda).FirstOrDefault();
+            if (publicacion == null)
+            {
+                throw new PublicacionNoExistenteException();
+            }
+            Ciudadano ciudadano = BuscarCiudadano(nombreCiudadano);
+            publicacion.AgregarComentario(ciudadano, contenidoComentario);
         }
     }
 }

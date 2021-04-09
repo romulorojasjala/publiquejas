@@ -189,6 +189,32 @@ namespace XUnitTestProject
             var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
             Assert.Empty(ciudadanosEncontrados);
         }
+
+        [Fact]
+        public void AgregarComentarioAPublicacionNoExistente()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+            var ciudadano = administrador.Ciudadanos.First();
+            var categoriaABuscar = administrador.Categorias.First().Nombre;
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
+            {
+                new TerminoCategoria<Publicacion>(categoriaABuscar)
+            };
+            var publicacionAEliminar = administrador.BuscarPublicacion(terminosDeBusqueda).First();
+            administrador.EliminarPublicacion(ciudadano.NombreCompleto, publicacionAEliminar.Titulo, publicacionAEliminar.Contenido, publicacionAEliminar.Categoria.Nombre);
+
+            try
+            {
+                administrador.AgregarComentario(ciudadano.NombreCompleto, publicacionAEliminar.Titulo, publicacionAEliminar.Contenido, publicacionAEliminar.Categoria.Nombre, "Comentario");
+            }
+            catch (PublicacionNoExistenteException e)
+            {
+                Assert.Equal(PublicacionNoExistenteException.MensajeDeError, e.Message);
+            }
+        }
     }
 
     // AgregarComentarios.
