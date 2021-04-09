@@ -1,4 +1,5 @@
-﻿using System;
+﻿using publiquejas.Votos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -81,6 +82,18 @@ namespace publiquejas
             });
 
             return ciudadanos;
+        }
+
+        public void VotarPublicacion(Publicacion publicacion, Ciudadano ciudadano, TipoVoto tipoVoto)
+        {
+            var publicacionEncontrada = Publicaciones.FirstOrDefault(p => p == publicacion);
+            if (publicacionEncontrada == null)
+                throw new ArgumentException();
+            var ciudadanoEncontrado = Ciudadanos.FirstOrDefault(c => c == ciudadano);
+            if (ciudadanoEncontrado == null)
+                throw new ArgumentException(); 
+
+            publicacion.Votar(ciudadano, tipoVoto);
         }
     }
 }
