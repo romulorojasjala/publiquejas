@@ -82,9 +82,21 @@ namespace XUnitTestProject
             Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
         }
 
-        // AgregarCiudadanoConNombreDeUsuarioRepetido.
+        [Fact]
+        public void AgregarCiudadanoConNombreDeUsuarioRepetido()
+        {
+            string nombreDeUsuario = "userNameRepetido";
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador.AgregarCiudadano(nombreDeUsuario, "Nombre", "Apellido", DateTime.Now, "lugar");
+            NombreDeUsuarioDuplicado excepcion = Assert.Throws<NombreDeUsuarioDuplicado>(() =>
+                administrador.AgregarCiudadano(nombreDeUsuario, "Nombre1", "Apellido1", DateTime.Now, "lugar2"));
+            Assert.Equal(1, administrador.Ciudadanos.Count);
+            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+            Assert.Equal(NombreDeUsuarioDuplicado.MensajeDeError, excepcion.Message);
+            Assert.Equal(nombreDeUsuario, excepcion.NombreDeUsuario);
+        }
 
-        // AgregarCiudadanoConMenosDe18Años.
+        // AgregarCiudadanoConMenosDe18A?os.
 
         // ActualizarLugarDeCiudadano.
 

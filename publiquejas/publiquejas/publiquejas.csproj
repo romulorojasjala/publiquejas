@@ -81,6 +81,7 @@
     <Compile Include="TerminoDeBusqueda.cs" />
     <Compile Include="Buscable.cs" />
     <Compile Include="TerminoTexto.cs" />
+    <Compile Include="NombreDeUsuarioDuplicado.cs" />
     <Compile Include="Votos\Voto.cs" />
     <Compile Include="Votos\TipoVoto.cs" />
     <Compile Include="Votos\Votable.cs" />
