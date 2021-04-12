@@ -65,10 +65,10 @@ namespace XUnitTestProject
                 string titulo = $"Titulo{randomValue}";
                 string contenido = $"Contenido{randomValue}";
 
-                int indexCiudadano = randon.Next(admin.Ciudadanos.Count);
+                int indexCiudadano = randon.Next(admin.AdminDeUsuarios.ContarCiudadanos());
                 int indexCategoria = randon.Next(admin.Categorias.Count);
 
-                admin.AgregarPublicacion(admin.Ciudadanos[indexCiudadano].UserName, titulo, contenido, admin.Categorias[indexCategoria].Nombre);
+                admin.AgregarPublicacion(admin.AdminDeUsuarios.GetCiudadano(indexCiudadano).UserName, titulo, contenido, admin.Categorias[indexCategoria].Nombre);
             }
 
             return admin;
@@ -79,9 +79,9 @@ namespace XUnitTestProject
         public void AgregarCiudadano()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
-            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
-            Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
-            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+            administrador.AdminDeUsuarios.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            Assert.True(administrador.AdminDeUsuarios.ContarCiudadanos() > 0, "La lista de ciudadanos esta vacia");
+            Assert.Equal("Nombre Apellido", administrador.AdminDeUsuarios.GetCiudadano(0).NombreCompleto);
         }
 
         [Fact]
@@ -89,11 +89,11 @@ namespace XUnitTestProject
         {
             string nombreDeUsuario = "userNameRepetido";
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
-            administrador.AgregarCiudadano(nombreDeUsuario, "Nombre", "Apellido", DateTime.Now, "lugar");
+            administrador.AdminDeUsuarios.AgregarCiudadano(nombreDeUsuario, "Nombre", "Apellido", DateTime.Now, "lugar");
             NombreDeUsuarioDuplicado excepcion = Assert.Throws<NombreDeUsuarioDuplicado>(() =>
-                administrador.AgregarCiudadano(nombreDeUsuario, "Nombre1", "Apellido1", DateTime.Now, "lugar2"));
-            Assert.Equal(1, administrador.Ciudadanos.Count);
-            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+                administrador.AdminDeUsuarios.AgregarCiudadano(nombreDeUsuario, "Nombre1", "Apellido1", DateTime.Now, "lugar2"));
+            Assert.Equal(1, administrador.AdminDeUsuarios.ContarCiudadanos());
+            Assert.Equal("Nombre Apellido", administrador.AdminDeUsuarios.GetCiudadano(0).NombreCompleto);
             Assert.Equal(NombreDeUsuarioDuplicado.MensajeDeError, excepcion.Message);
             Assert.Equal(nombreDeUsuario, excepcion.NombreDeUsuario);
         }
@@ -106,18 +106,18 @@ namespace XUnitTestProject
         public void ActualizarLugarDeCiudadano()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
-            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
-            Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
-            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
-
-            administrador.ActualizarUbicacionCiudadano("userName", "newLugar");
+            administrador.AdminDeUsuarios.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            Assert.True(administrador.AdminDeUsuarios.ContarCiudadanos() > 0, "La lista de ciudadanos esta vacia");
+            Assert.Equal("Nombre Apellido", administrador.AdminDeUsuarios.GetCiudadano(0).NombreCompleto);
+            
+            administrador.AdminDeUsuarios.ActualizarUbicacionCiudadano("userName", "newLugar");
 
             var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
             {
                 new TerminoTexto<Ciudadano>("UserName", "userName")
             };
 
-            var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
+            var ciudadanosEncontrados = administrador.AdminDeUsuarios.BuscarCiudadanos(terminosDeBusqueda);
             Assert.Single(ciudadanosEncontrados);
             Assert.Equal("newLugar", ciudadanosEncontrados.First().Ubicacion);
         }
@@ -126,12 +126,12 @@ namespace XUnitTestProject
         public void ActualizarLugarDeCiudadanoConUserNameInvalido()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
-            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
-            Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
-            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+            administrador.AdminDeUsuarios.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            Assert.True(administrador.AdminDeUsuarios.ContarCiudadanos() > 0, "La lista de ciudadanos esta vacia");
+            Assert.Equal("Nombre Apellido", administrador.AdminDeUsuarios.GetCiudadano(0).NombreCompleto);
 
-            // AgregarCiudadanoConMenosDe18A?os.
-            ActualizacionUbicacionUserNameCiudadanoException exception = Assert.Throws<ActualizacionUbicacionUserNameCiudadanoException>(() => administrador.ActualizarUbicacionCiudadano("userNameError", "newLugar"));
+        // AgregarCiudadanoConMenosDe18A?os.
+            ActualizacionUbicacionUserNameCiudadanoException exception = Assert.Throws<ActualizacionUbicacionUserNameCiudadanoException>(() => administrador.AdminDeUsuarios.ActualizarUbicacionCiudadano("userNameError", "newLugar"));
             Assert.Equal(ActualizacionUbicacionUserNameCiudadanoException.GetMessage, exception.Message);
 
         }
@@ -140,16 +140,38 @@ namespace XUnitTestProject
         public void ActualizarLugarDeCiudadanoConNuevaUbicacionInvalida()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
-            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
-            Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
-            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+            administrador.AdminDeUsuarios.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            Assert.True(administrador.AdminDeUsuarios.ContarCiudadanos() > 0, "La lista de ciudadanos esta vacia");
+            Assert.Equal("Nombre Apellido", administrador.AdminDeUsuarios.GetCiudadano(0).NombreCompleto);
 
-            ActualizacionUbicacionNuevaUbicacionException exception = Assert.Throws<ActualizacionUbicacionNuevaUbicacionException>(() => administrador.ActualizarUbicacionCiudadano("userName", ""));
+            ActualizacionUbicacionNuevaUbicacionException exception = Assert.Throws<ActualizacionUbicacionNuevaUbicacionException>(() => administrador.AdminDeUsuarios.ActualizarUbicacionCiudadano("userName", ""));
             Assert.Equal(ActualizacionUbicacionNuevaUbicacionException.GetMessage, exception.Message);
         }
 
         // EliminarCiudadanoYAnonimizarElCiudadanoEnLasPublicacionesCategoriasComentariosCreadas. Maria
         // En realidad seria eliminar datos personales del usuario y reemplando su nombre de usuario por uno generico.
+        [Fact]
+        public void EliminarCiudadanoYAnonimizarlo()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador.AdminDeUsuarios.AgregarCiudadano("username", "Nombre", "Apellido", DateTime.Now, "lugar");
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+
+            administrador.AdminDeUsuarios.EliminarCiudadano("username");
+            Assert.False(administrador.AdminDeUsuarios.ExisteCiudadano("username"), "El ciudadano sigue existiendo");
+        }
+        
+        [Fact]
+        public void EliminarCiudadanoInexistente()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador = CrearCiudadanos(administrador);
+            administrador = CrearCategorias(administrador);
+            administrador.AgregarPublicacion(administrador.AdminDeUsuarios.GetCiudadano(0).UserName, "Titulo", "Contenido", administrador.Categorias[0].Nombre);
+            
+            Assert.Throws<CiudadanoInexistente>( () => administrador.AdminDeUsuarios.EliminarCiudadano("usernameInexistente"));
+        }
 
         // EliminarCiudadanoNoExistente.
 
@@ -159,7 +181,7 @@ namespace XUnitTestProject
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             administrador = CrearCiudadanos(administrador);
             administrador = CrearCategorias(administrador);
-            administrador.AgregarPublicacion(administrador.Ciudadanos[0].UserName, "Titulo", "Contenido", administrador.Categorias[0].Nombre);
+            administrador.AgregarPublicacion(administrador.AdminDeUsuarios.GetCiudadano(0).UserName, "Titulo", "Contenido", administrador.Categorias[0].Nombre);
             Assert.True(administrador.Publicaciones.Count > 0, "la lista de publicaciones esta vacia");
         }
 
@@ -226,12 +248,14 @@ namespace XUnitTestProject
             CrearCategorias(administrador);
             CrearPublicaciones(administrador);
 
-            var ciudadanoAEncontrar = administrador.Ciudadanos.Last();
+            //var ciudadanoAEncontrar = administrador.Ciudadanos.Last();
+            int numCiudadanos = administrador.AdminDeUsuarios.ContarCiudadanos();
+            var ciudadanoAEncontrar = administrador.AdminDeUsuarios.GetCiudadano(numCiudadanos -1);
             var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
             {
                 new TerminoTexto<Ciudadano>("UserName", ciudadanoAEncontrar.UserName)
             };
-            var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
+            var ciudadanosEncontrados = administrador.AdminDeUsuarios.BuscarCiudadanos(terminosDeBusqueda);
             Assert.Single(ciudadanosEncontrados);
             Assert.Equal(ciudadanoAEncontrar.UserName, ciudadanosEncontrados.First().UserName);
         }
@@ -247,7 +271,7 @@ namespace XUnitTestProject
             {
                 new TerminoTexto<Ciudadano>("CriterioNoValido", "userName2")
             };
-            var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
+            var ciudadanosEncontrados = administrador.AdminDeUsuarios.BuscarCiudadanos(terminosDeBusqueda);
             Assert.Empty(ciudadanosEncontrados);
         }
 
@@ -260,8 +284,8 @@ namespace XUnitTestProject
             CrearPublicaciones(administrador);
 
             var publicacion1 = administrador.Publicaciones.FirstOrDefault();
-            var ciudadano1 = administrador.Ciudadanos.FirstOrDefault();
-            var ciudadano2 = administrador.Ciudadanos[1];
+            var ciudadano1 = administrador.AdminDeUsuarios.GetCiudadano(0);
+            var ciudadano2 = administrador.AdminDeUsuarios.GetCiudadano(1);
 
             administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
             administrador.VotarPublicacion(publicacion1, ciudadano2, TipoVoto.VotoPositivo);
@@ -278,8 +302,8 @@ namespace XUnitTestProject
             CrearPublicaciones(administrador);
 
             var publicacion1 = administrador.Publicaciones.FirstOrDefault();
-            var ciudadano1 = administrador.Ciudadanos.FirstOrDefault();
-            var ciudadano2 = administrador.Ciudadanos[1];
+            var ciudadano1 = administrador.AdminDeUsuarios.GetCiudadano(0);
+            var ciudadano2 = administrador.AdminDeUsuarios.GetCiudadano(1);
 
             administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
             administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
@@ -296,8 +320,8 @@ namespace XUnitTestProject
             CrearPublicaciones(administrador);
 
             var publicacion1 = administrador.Publicaciones.FirstOrDefault();
-            var ciudadano1 = administrador.Ciudadanos.FirstOrDefault();
-            var ciudadano2 = administrador.Ciudadanos[1];
+            var ciudadano1 = administrador.AdminDeUsuarios.GetCiudadano(0);
+            var ciudadano2 = administrador.AdminDeUsuarios.GetCiudadano(1);
 
             administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
             administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoNegativo);
@@ -313,18 +337,18 @@ namespace XUnitTestProject
             CrearCiudadanos(administrador);
             CrearCategorias(administrador);
             CrearPublicaciones(administrador);
-            var ciudadano = administrador.Ciudadanos.First();
             var categoriaABuscar = administrador.Categorias.First().Nombre;
             var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
             {
                 new TerminoCategoria<Publicacion>(categoriaABuscar)
             };
             var publicacionAEliminar = administrador.BuscarPublicacion(terminosDeBusqueda).First();
-            administrador.EliminarPublicacion(ciudadano.NombreCompleto, publicacionAEliminar.Titulo, publicacionAEliminar.Contenido, publicacionAEliminar.Categoria.Nombre);
+            var ciudadano = publicacionAEliminar.Ciudadano;
+            administrador.EliminarPublicacion(publicacionAEliminar.Titulo);
 
             try
             {
-                administrador.AgregarComentario(ciudadano.NombreCompleto, publicacionAEliminar.Titulo, publicacionAEliminar.Contenido, publicacionAEliminar.Categoria.Nombre, "Comentario");
+                administrador.AgregarComentario(ciudadano.NombreCompleto, publicacionAEliminar.Titulo, "Comentario");
             }
             catch (PublicacionNoExistenteException e)
             {
@@ -393,5 +417,4 @@ namespace XUnitTestProject
 
         // EliminarCategorias.
     }
-
 }
