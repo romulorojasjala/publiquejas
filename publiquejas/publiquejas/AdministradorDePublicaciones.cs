@@ -32,6 +32,7 @@ namespace publiquejas
         public IList<Publicacion> Publicaciones => _publicaciones.AsReadOnly();
         public IList<ICategoria> Categorias => _categorias.AsReadOnly();
 
+        public AdministradorDeUsuarios AdminDeUsuarios { get { return _adminDeUsuarios; } }
         public void AgregarCiudadano(string nombreDeUsuario, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion) 
         {
             Ciudadano ciudadanoDuplicado = _ciudadanos.Find((ciudadanoBuscado) => ciudadanoBuscado.UserName == nombreDeUsuario);
@@ -47,7 +48,7 @@ namespace publiquejas
 
         public void ActualizarUbicacionCiudadano(string userName, string nuevaUbicacion)
         {
-            Ciudadano ciudadano = BuscarCiudadano(userName);
+            Ciudadano ciudadano = _adminDeUsuarios.BuscarCiudadano(userName);
 
             if (ciudadano == null)
             {
