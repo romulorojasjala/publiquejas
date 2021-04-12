@@ -1,4 +1,6 @@
-﻿using System;
+﻿using publiquejas.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using publiquejas.Excepciones;
@@ -8,47 +10,80 @@ namespace publiquejas
 {
     public class AdministradorDePublicaciones
     {
-        private List<Categoria> _categorias;
+        private List<Ciudadano> _ciudadanos;
+        private List<ICategoria> _categorias;
         private List<Publicacion> _publicaciones;
+        private IValidadorCategoria _validadorCategoria;
         private AdministradorDeUsuarios _adminDeUsuarios;
 
         public AdministradorDePublicaciones()
         {
-            _categorias = new List<Categoria>();
+            var serviceProvider = new ServiceCollection()
+                .AddScoped<IValidadorCategoria, ValidadorCategoria>()
+                .BuildServiceProvider();
+            
+            _ciudadanos = new List<Ciudadano>();
+            _categorias = new List<ICategoria>();
             _publicaciones = new List<Publicacion>();
+            _validadorCategoria = serviceProvider.GetService<IValidadorCategoria>();
             _adminDeUsuarios = new AdministradorDeUsuarios();
         }
 
         public IList<Publicacion> Publicaciones => _publicaciones.AsReadOnly();
-        public IList<Categoria> Categorias => _categorias.AsReadOnly();
-        public AdministradorDeUsuarios AdminDeUsuarios { get { return _adminDeUsuarios; } }
+        public IList<ICategoria> Categorias => _categorias.AsReadOnly();
 
-        public void AgregarCategoria(string nombreDeCategoria)
+        public void AgregarCiudadano(string nombreDeUsuario, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion) 
         {
-            Categoria categoria = BuscarCategoria(nombreDeCategoria);
-            if (categoria == null)
+            Ciudadano ciudadanoDuplicado = _ciudadanos.Find((ciudadanoBuscado) => ciudadanoBuscado.UserName == nombreDeUsuario);
+
+            if (ciudadanoDuplicado != null)
             {
-                categoria = new Categoria(nombreDeCategoria);
-                _categorias.Add(categoria);
+                throw new NombreDeUsuarioDuplicado(nombreDeUsuario);
             }
+
+            var ciudadano = new Ciudadano(nombreDeUsuario, nombre, apellido, fechaDeNacimiento, new Ubicacion(ubicacion));
+            _ciudadanos.Add(ciudadano);
+        }
+
+        public void ActualizarUbicacionCiudadano(string userName, string nuevaUbicacion)
+        {
+            Ciudadano ciudadano = BuscarCiudadano(userName);
+
+            if (ciudadano == null)
+            {
+                throw new ActualizacionUbicacionUserNameCiudadanoException(userName);
+            }
+
+            if(string.IsNullOrEmpty(nuevaUbicacion))
+            {
+                throw new ActualizacionUbicacionNuevaUbicacionException(nuevaUbicacion);
+            }
+
+            ciudadano.ActualizarUbicacion(ubicacion: nuevaUbicacion);
+        }
+        public void AgregarCategoria(string nombreDeCategoria)
+        {            
+            Categoria categoria = new Categoria(nombreDeCategoria);
+            _validadorCategoria.VerificarDuplicados(categoria, _categorias);
+            _validadorCategoria.Validar(categoria);
+            _categorias.Add(categoria);
         }
 
         public void AgregarPublicacion(string userNameDeCiudadano, string titulo, string contenido, string nombreDeCategoria)
         {
             Ciudadano ciudadano = _adminDeUsuarios.BuscarCiudadano(userNameDeCiudadano);
-            Categoria categoria = BuscarCategoria(nombreDeCategoria);
+            ICategoria categoria = AdministradorDePublicaciones.BuscarCategoria(nombreDeCategoria, _categorias);
 
-            if (ciudadano != null && categoria != null)
-            {
+            if (ciudadano != null && categoria != null) {
                 Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano, categoria);
                 categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
             }
         }
 
-        private Categoria BuscarCategoria(string nombreDeCategoria)
+        public static ICategoria BuscarCategoria(string nombreDeCategoria, IList<ICategoria> categorias)
         {
-            return _categorias.Where(categoria => categoria.Nombre.Equals(nombreDeCategoria)).FirstOrDefault();
+            return categorias.Where(categoria => categoria.Nombre.Equals(nombreDeCategoria)).FirstOrDefault();
         }
 
         public List<Publicacion> BuscarPublicacion(List<TerminoDeBusqueda<Publicacion>> terminosDeBusqueda)

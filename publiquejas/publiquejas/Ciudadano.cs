@@ -15,6 +15,7 @@ namespace publiquejas
 
         public string UserName { get { return _userName; } }
         public string NombreCompleto { get { return _nombre + " " + _apellido; } }
+        public string Ubicacion => _ubicacion.UbicacionName;
         public DateTime FechaDeNacimiento { get { return _fechaDeNacimiento; } }
 
         public Ciudadano(string userName, string nombre, string apellido, DateTime fechaDeNacimiento, Ubicacion ubicacion)
@@ -37,6 +38,12 @@ namespace publiquejas
             }
 
             return null;
+        }
+
+        public void ActualizarUbicacion(string ubicacion)
+        {
+            this._ubicacion = null;
+            _ubicacion = new Ubicacion(ubicacion);
         }
 
         public void Anonimizar(int num)
