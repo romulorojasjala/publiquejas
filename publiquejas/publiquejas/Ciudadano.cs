@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace publiquejas
 {
@@ -43,10 +42,18 @@ namespace publiquejas
         public void Anonimizar(int num)
         {
             _userName = "Anonimo" + num;
-            _nombre = "Usuario";
+            _nombre = "Usuario" + GetHash().Substring(0, 8);
             _apellido = "";
             _fechaDeNacimiento = DateTime.Now;
             _ubicacion = null;
+        }
+        private string GetHash()
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] data = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(NombreCompleto));
+                return string.Join(string.Empty, data.Select(x => x.ToString("x2")));
+            }
         }
     }
 }

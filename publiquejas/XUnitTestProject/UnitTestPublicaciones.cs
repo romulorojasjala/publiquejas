@@ -103,7 +103,7 @@ namespace XUnitTestProject
         // EliminarCiudadanoYAnonimizarElCiudadanoEnLasPublicacionesCategoriasComentariosCreadas.
         // En realidad seria eliminar datos personales del usuario y reemplando su nombre de usuario por uno generico.
         [Fact]
-        public void EliminarCiudadano()
+        public void EliminarCiudadanoYAnonimizarlo()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             administrador.AdminDeUsuarios.AgregarCiudadano("username", "Nombre", "Apellido", DateTime.Now, "lugar");
