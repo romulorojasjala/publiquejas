@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using publiquejas.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,22 @@ namespace publiquejas
             _ciudadanos.Add(ciudadano);
         }
 
+        public void ActualizarUbicacionCiudadano(string userName, string nuevaUbicacion)
+        {
+            Ciudadano ciudadano = BuscarCiudadano(userName);
+
+            if (ciudadano == null)
+            {
+                throw new ActualizacionUbicacionUserNameCiudadanoException(userName);
+            }
+
+            if(string.IsNullOrEmpty(nuevaUbicacion))
+            {
+                throw new ActualizacionUbicacionNuevaUbicacionException(nuevaUbicacion);
+            }
+
+            ciudadano.ActualizarUbicacion(ubicacion: nuevaUbicacion);
+        }
         public void AgregarCategoria(string nombreDeCategoria)
         {            
             Categoria categoria = new Categoria(nombreDeCategoria);

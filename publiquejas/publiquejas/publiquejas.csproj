@@ -81,6 +81,8 @@
     <Compile Include="Criterio.cs" />
     <Compile Include="Excepciones\CiudadanoNoEncontradoExcepcion.cs" />
     <Compile Include="Excepciones\PublicacionNoEncontradaExcepcion .cs" />
+    <Compile Include="Exceptions\ActualizacionUbicacionNuevaUbicacionException.cs" />
+    <Compile Include="Exceptions\ActualizacionUbicacionUserNameCiudadanoException.cs" />
     <Compile Include="ICategoria.cs" />
     <Compile Include="IValidadorCategoria.cs" />
     <Compile Include="ModeloCiudadano.cs" />
