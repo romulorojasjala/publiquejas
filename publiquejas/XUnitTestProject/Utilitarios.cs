@@ -47,7 +47,7 @@ namespace XUnitTestProject
 
                 foreach (var ciudadano in ciudadanos)
                 {
-                    administrador.AgregarCiudadano(userName: ciudadano.UserName, nombre: ciudadano.Nombre, apellido: ciudadano.Apellido,
+                    administrador.AgregarCiudadano(nombreDeUsuario: ciudadano.UserName, nombre: ciudadano.Nombre, apellido: ciudadano.Apellido,
                         fechaDeNacimiento: ciudadano.FechaDeNacimiento, ubicacion: ciudadano.Ubicacion);
                 }
             }
