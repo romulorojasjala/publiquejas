@@ -8,34 +8,20 @@ namespace publiquejas
 {
     public class AdministradorDePublicaciones
     {
-        
-
         private List<Categoria> _categorias;
         private List<Publicacion> _publicaciones;
-        private AdministradorDeUsuarios _administradorDeUsuarios;
+        private AdministradorDeUsuarios _adminDeUsuarios;
 
         public AdministradorDePublicaciones()
         {
             _categorias = new List<Categoria>();
             _publicaciones = new List<Publicacion>();
-            _administradorDeUsuarios = new AdministradorDeUsuarios();
+            _adminDeUsuarios = new AdministradorDeUsuarios();
         }
 
         public IList<Publicacion> Publicaciones => _publicaciones.AsReadOnly();
         public IList<Categoria> Categorias => _categorias.AsReadOnly();
-
-        public void AgregarCiudadano(string nombreDeUsuario, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion) 
-        {
-            Ciudadano ciudadanoDuplicado = _ciudadanos.Find((ciudadanoBuscado) => ciudadanoBuscado.UserName == nombreDeUsuario);
-
-            if (ciudadanoDuplicado != null)
-            {
-                throw new NombreDeUsuarioDuplicado(nombreDeUsuario);
-            }
-
-            var ciudadano = new Ciudadano(nombreDeUsuario, nombre, apellido, fechaDeNacimiento, new Ubicacion(ubicacion));
-            _ciudadanos.Add(ciudadano);
-        }
+        public AdministradorDeUsuarios AdminDeUsuarios { get { return _adminDeUsuarios; } }
 
         public void AgregarCategoria(string nombreDeCategoria)
         {
@@ -49,10 +35,11 @@ namespace publiquejas
 
         public void AgregarPublicacion(string userNameDeCiudadano, string titulo, string contenido, string nombreDeCategoria)
         {
-            Ciudadano ciudadano = _administradorDeUsuarios.BuscarCiudadano(userNameDeCiudadano);
+            Ciudadano ciudadano = _adminDeUsuarios.BuscarCiudadano(userNameDeCiudadano);
             Categoria categoria = BuscarCategoria(nombreDeCategoria);
 
-            if (ciudadano != null && categoria != null) {
+            if (ciudadano != null && categoria != null)
+            {
                 Publicacion publicacion = new Publicacion(titulo, contenido, ciudadano, categoria);
                 categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
@@ -76,44 +63,12 @@ namespace publiquejas
             return publicaciones;
         }
 
-        public List<Ciudadano> BuscarCiudadanos(List<TerminoDeBusqueda<Ciudadano>> terminosDeBusqueda)
-        {
-            var ciudadanos = _ciudadanos;
-
-            terminosDeBusqueda.ForEach(termino =>
-            {
-                ciudadanos = termino.filtrar(ciudadanos);
-            });
-
-            return ciudadanos;
-        }
-
-        public void EliminarCiudadano(string nombreCiudadano)
-        {
-            _administradorDeUsuarios.EliminarCiudadano(nombreCiudadano);
-        }
-
-        public bool ExisteCiudadano(string nombreCiudadano)
-        {
-            return _administradorDeUsuarios.ExisteCiudadano(nombreCiudadano);
-        }
-
-        public int ContarCiudadanos()
-        {
-            return _administradorDeUsuarios.ContarUsuarios();
-        }
-
-        public Ciudadano GetNCiudadano(int index)
-        {
-            return _administradorDeUsuarios.GetCiudadano(index);
-        }
-
         public void VotarPublicacion(Publicacion publicacion, Ciudadano ciudadano, TipoVoto tipoVoto)
         {
             var publicacionEncontrada = Publicaciones.FirstOrDefault(p => p == publicacion);
             if (publicacionEncontrada == null)
                 throw new PublicacionNoEncontradaExcepcion();
-            var ciudadanoEncontrado = Ciudadanos.FirstOrDefault(c => c == ciudadano);
+            var ciudadanoEncontrado = _adminDeUsuarios.BuscarCiudadano(ciudadano);
             if (ciudadanoEncontrado == null)
                 throw new CiudadanoNoEncontradoExcepcion();
 
@@ -136,6 +91,7 @@ namespace publiquejas
                 throw new PublicacionNoEncontradaExcepcion();
 
             return publicacionEncontrada.GetVotos(tipoVoto);
+        }
     }
 
 }

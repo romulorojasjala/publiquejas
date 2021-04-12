@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace publiquejas
 {
-    class AdministradorDeUsuarios
+    public class AdministradorDeUsuarios
     {
         private List<Ciudadano> _ciudadanos;
         private int contadorUsuariosEliminados;
@@ -16,11 +16,18 @@ namespace publiquejas
             _ciudadanos = new List<Ciudadano>();
         }
 
-        public IList<Ciudadano> Ciudadanos => _ciudadanos.AsReadOnly();
+        // public IList<Ciudadano> Ciudadanos => _ciudadanos.AsReadOnly();
 
-        public void AgregarCiudadano(string userName, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion)
+        public void AgregarCiudadano(string nombreDeUsuario, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion)
         {
-            var ciudadano = new Ciudadano(userName, nombre, apellido, fechaDeNacimiento, new Ubicacion(ubicacion));
+            Ciudadano ciudadanoDuplicado = _ciudadanos.Find((ciudadanoBuscado) => ciudadanoBuscado.UserName == nombreDeUsuario);
+
+            if (ciudadanoDuplicado != null)
+            {
+                throw new NombreDeUsuarioDuplicado(nombreDeUsuario);
+            }
+
+            var ciudadano = new Ciudadano(nombreDeUsuario, nombre, apellido, fechaDeNacimiento, new Ubicacion(ubicacion));
             _ciudadanos.Add(ciudadano);
         }
 
@@ -28,7 +35,10 @@ namespace publiquejas
         {
             return _ciudadanos.Where(ciudadano => ciudadano.UserName.Equals(userNameDeCiudadano)).FirstOrDefault();
         }
-
+        public Ciudadano BuscarCiudadano(Ciudadano ciudadano)
+        {
+            return _ciudadanos.FirstOrDefault(c => c == ciudadano);
+        }
         public List<Ciudadano> BuscarCiudadanos(List<TerminoDeBusqueda<Ciudadano>> terminosDeBusqueda)
         {
             var ciudadanos = _ciudadanos;
@@ -64,7 +74,7 @@ namespace publiquejas
             return existe;
         }
 
-        public int ContarUsuarios()
+        public int ContarCiudadanos()
         {
             return _ciudadanos.Count();
         }
