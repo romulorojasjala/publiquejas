@@ -79,6 +79,7 @@
     <Compile Include="Excepciones\CategoriaConNombreVacio.cs" />
     <Compile Include="ValidadorCategoria.cs" />
     <Compile Include="Criterio.cs" />
+    <Compile Include="Comentario.cs" />
     <Compile Include="Excepciones\CiudadanoNoEncontradoExcepcion.cs" />
     <Compile Include="Excepciones\PublicacionNoEncontradaExcepcion .cs" />
     <Compile Include="Exceptions\ActualizacionUbicacionNuevaUbicacionException.cs" />

@@ -109,7 +109,7 @@ namespace XUnitTestProject
             administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
             Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
             Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
-            
+
             administrador.ActualizarUbicacionCiudadano("userName", "newLugar");
 
             var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
@@ -130,7 +130,7 @@ namespace XUnitTestProject
             Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
             Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
 
-        // AgregarCiudadanoConMenosDe18A?os.
+            // AgregarCiudadanoConMenosDe18A?os.
             ActualizacionUbicacionUserNameCiudadanoException exception = Assert.Throws<ActualizacionUbicacionUserNameCiudadanoException>(() => administrador.ActualizarUbicacionCiudadano("userNameError", "newLugar"));
             Assert.Equal(ActualizacionUbicacionUserNameCiudadanoException.GetMessage, exception.Message);
 
@@ -331,11 +331,10 @@ namespace XUnitTestProject
                 Assert.Equal(PublicacionNoExistenteException.MensajeDeError, e.Message);
             }
         }
-    }
 
-    // AgregarComentarios. Emilio
+        // AgregarComentarios. Emilio
 
-    // AgregarComentarioAPublicacionNoExistente. Martin
+        // AgregarComentarioAPublicacionNoExistente. Martin
 
         // EliminarComentarios.
 
@@ -394,4 +393,5 @@ namespace XUnitTestProject
 
         // EliminarCategorias.
     }
+
 }
