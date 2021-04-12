@@ -39,5 +39,14 @@ namespace publiquejas
 
             return null;
         }
+
+        public void Anonimizar(int num)
+        {
+            _userName = "Anonimo" + num;
+            _nombre = "Usuario" ;
+            _apellido = "Inactivo";
+            _fechaDeNacimiento = DateTime.Now;
+            _ubicacion = null;
+        }
     }
 }

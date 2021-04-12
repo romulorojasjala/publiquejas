@@ -62,10 +62,10 @@ namespace XUnitTestProject
                 string titulo = $"Titulo{randomValue}";
                 string contenido = $"Contenido{randomValue}";
 
-                int indexCiudadano = randon.Next(admin.Ciudadanos.Count);
+                int indexCiudadano = randon.Next(admin.ContarCiudadanos());
                 int indexCategoria = randon.Next(admin.Categorias.Count);
 
-                admin.AgregarPublicacion(admin.Ciudadanos[indexCiudadano].UserName, titulo, contenido, admin.Categorias[indexCategoria].Nombre);
+                admin.AgregarPublicacion(admin.GetNCiudadano(indexCiudadano).UserName, titulo, contenido, admin.Categorias[indexCategoria].Nombre);
             }
 
             return admin;
@@ -77,8 +77,8 @@ namespace XUnitTestProject
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
-            Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
-            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+            Assert.True(administrador.ContarCiudadanos() > 0, "La lista de ciudadanos esta vacia");
+            Assert.Equal("Nombre Apellido", administrador.GetNCiudadano(0).NombreCompleto);
         }
 
         // AgregarCiudadanoConNombreDeUsuarioRepetido.
@@ -89,6 +89,28 @@ namespace XUnitTestProject
 
         // EliminarCiudadanoYAnonimizarElCiudadanoEnLasPublicacionesCategoriasComentariosCreadas.
         // En realidad seria eliminar datos personales del usuario y reemplando su nombre de usuario por uno generico.
+        [Fact]
+        public void EliminarCiudadano()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador.AgregarCiudadano("username", "Nombre", "Apellido", DateTime.Now, "lugar");
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+
+            administrador.EliminarCiudadano("username");
+            Assert.False(administrador.ExisteCiudadano("username"), "El ciudadano sigue existiendo");
+        }
+        
+        [Fact]
+        public void EliminarCiudadanoInexistente()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador = CrearCiudadanos(administrador);
+            administrador = CrearCategorias(administrador);
+            administrador.AgregarPublicacion(administrador.GetNCiudadano(0).UserName, "Titulo", "Contenido", administrador.Categorias[0].Nombre);
+            
+            Assert.Throws<CiudadanoInexistente>( () => administrador.EliminarCiudadano("usernameInexistente"));
+        }
 
         // EliminarCiudadanoNoExistente.
 
@@ -98,7 +120,7 @@ namespace XUnitTestProject
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             administrador = CrearCiudadanos(administrador);
             administrador = CrearCategorias(administrador);
-            administrador.AgregarPublicacion(administrador.Ciudadanos[0].UserName, "Titulo", "Contenido", administrador.Categorias[0].Nombre);
+            administrador.AgregarPublicacion(administrador.GetNCiudadano(0).UserName, "Titulo", "Contenido", administrador.Categorias[0].Nombre);
             Assert.True(administrador.Publicaciones.Count > 0, "la lista de publicaciones esta vacia");
         }
 
@@ -165,7 +187,9 @@ namespace XUnitTestProject
             CrearCategorias(administrador);
             CrearPublicaciones(administrador);
 
-            var ciudadanoAEncontrar = administrador.Ciudadanos.Last();
+            //var ciudadanoAEncontrar = administrador.Ciudadanos.Last();
+            int numCiudadanos = administrador.ContarCiudadanos();
+            var ciudadanoAEncontrar = administrador.GetNCiudadano(numCiudadanos -1);
             var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
             {
                 new TerminoTexto<Ciudadano>("UserName", ciudadanoAEncontrar.UserName)

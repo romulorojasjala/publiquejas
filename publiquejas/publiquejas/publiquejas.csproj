@@ -66,8 +66,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdministradorDePublicaciones.cs" />
+    <Compile Include="AdministradorDeUsuarios.cs" />
     <Compile Include="Categoria.cs" />
     <Compile Include="Ciudadano.cs" />
+    <Compile Include="CiudadanoInexistente.cs" />
     <Compile Include="Criterio.cs" />
     <Compile Include="ModeloCiudadano.cs" />
     <Compile Include="Publicacion.cs" />
