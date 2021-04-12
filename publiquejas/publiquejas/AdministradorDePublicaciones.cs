@@ -1,4 +1,5 @@
-﻿using System;
+﻿using publiquejas.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,6 +31,17 @@ namespace publiquejas
         public void ActualizarUbicacionCiudadano(string userName, string nuevaUbicacion)
         {
             Ciudadano ciudadano = BuscarCiudadano(userName);
+
+            if (ciudadano == null)
+            {
+                throw new ActualizacionUbicacionUserNameCiudadanoException(userName);
+            }
+
+            if(string.IsNullOrEmpty(nuevaUbicacion))
+            {
+                throw new ActualizacionUbicacionNuevaUbicacionException(nuevaUbicacion);
+            }
+
             ciudadano.ActualizarUbicacion(ubicacion: nuevaUbicacion);
         }
         public void AgregarCategoria(string nombreDeCategoria)

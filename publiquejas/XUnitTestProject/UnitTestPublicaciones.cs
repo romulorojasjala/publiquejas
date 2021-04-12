@@ -4,6 +4,7 @@ using publiquejas;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using publiquejas.Exceptions;
 
 namespace XUnitTestProject
 {
@@ -93,15 +94,42 @@ namespace XUnitTestProject
             administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
             Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
             Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+            
             administrador.ActualizarUbicacionCiudadano("userName", "newLugar");
 
             var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
             {
                 new TerminoTexto<Ciudadano>("UserName", "userName")
             };
+
             var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
             Assert.Single(ciudadanosEncontrados);
             Assert.Equal("newLugar", ciudadanosEncontrados.First().Ubicacion);
+        }
+
+        [Fact]
+        public void ActualizarLugarDeCiudadanoConUserNameInvalido()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
+            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+
+            ActualizacionUbicacionUserNameCiudadanoException exception = Assert.Throws<ActualizacionUbicacionUserNameCiudadanoException>(() => administrador.ActualizarUbicacionCiudadano("userNameError", "newLugar"));
+            Assert.Equal(ActualizacionUbicacionUserNameCiudadanoException.GetMessage, exception.Message);
+
+        }
+
+        [Fact]
+        public void ActualizarLugarDeCiudadanoConNuevaUbicacionInvalida()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
+            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+
+            ActualizacionUbicacionNuevaUbicacionException exception = Assert.Throws<ActualizacionUbicacionNuevaUbicacionException>(() => administrador.ActualizarUbicacionCiudadano("userName", ""));
+            Assert.Equal(ActualizacionUbicacionNuevaUbicacionException.GetMessage, exception.Message);
         }
 
         // EliminarCiudadanoYAnonimizarElCiudadanoEnLasPublicacionesCategoriasComentariosCreadas. Maria
