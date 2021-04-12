@@ -33,35 +33,7 @@ namespace publiquejas
         public IList<ICategoria> Categorias => _categorias.AsReadOnly();
 
         public AdministradorDeUsuarios AdminDeUsuarios { get { return _adminDeUsuarios; } }
-        public void AgregarCiudadano(string nombreDeUsuario, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion) 
-        {
-            Ciudadano ciudadanoDuplicado = _ciudadanos.Find((ciudadanoBuscado) => ciudadanoBuscado.UserName == nombreDeUsuario);
-
-            if (ciudadanoDuplicado != null)
-            {
-                throw new NombreDeUsuarioDuplicado(nombreDeUsuario);
-            }
-
-            var ciudadano = new Ciudadano(nombreDeUsuario, nombre, apellido, fechaDeNacimiento, new Ubicacion(ubicacion));
-            _ciudadanos.Add(ciudadano);
-        }
-
-        public void ActualizarUbicacionCiudadano(string userName, string nuevaUbicacion)
-        {
-            Ciudadano ciudadano = _adminDeUsuarios.BuscarCiudadano(userName);
-
-            if (ciudadano == null)
-            {
-                throw new ActualizacionUbicacionUserNameCiudadanoException(userName);
-            }
-
-            if(string.IsNullOrEmpty(nuevaUbicacion))
-            {
-                throw new ActualizacionUbicacionNuevaUbicacionException(nuevaUbicacion);
-            }
-
-            ciudadano.ActualizarUbicacion(ubicacion: nuevaUbicacion);
-        }
+        
         public void AgregarCategoria(string nombreDeCategoria)
         {            
             Categoria categoria = new Categoria(nombreDeCategoria);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using publiquejas.Exceptions;
 
 namespace publiquejas
 {
@@ -31,6 +32,22 @@ namespace publiquejas
             _ciudadanos.Add(ciudadano);
         }
 
+        public void ActualizarUbicacionCiudadano(string userName, string nuevaUbicacion)
+        {
+            Ciudadano ciudadano = BuscarCiudadano(userName);
+
+            if (ciudadano == null)
+            {
+                throw new ActualizacionUbicacionUserNameCiudadanoException(userName);
+            }
+
+            if (string.IsNullOrEmpty(nuevaUbicacion))
+            {
+                throw new ActualizacionUbicacionNuevaUbicacionException(nuevaUbicacion);
+            }
+
+            ciudadano.ActualizarUbicacion(ubicacion: nuevaUbicacion);
+        }
         public Ciudadano BuscarCiudadano(string userNameDeCiudadano)
         {
             return _ciudadanos.Where(ciudadano => ciudadano.UserName.Equals(userNameDeCiudadano)).FirstOrDefault();
