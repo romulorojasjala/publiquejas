@@ -62,10 +62,7 @@ namespace publiquejas
         {
              var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>()
              {
-                  new TerminoCategoria<Publicacion>(nombreDeCategoria),
-                  new TerminoCiudadano<Publicacion>(nombreCiudadano),
-                  new TerminoTexto<Publicacion>("titulo", titulo),
-                  new TerminoTexto<Publicacion>("contenido", contenido)
+                  new TerminoTexto<Publicacion>("titulo", titulo)
              };
              Publicacion publicacion = BuscarPublicacion(terminosDeBusqueda).FirstOrDefault();
              _publicaciones.Remove(publicacion);
@@ -139,10 +136,7 @@ namespace publiquejas
         {
             var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>()
             {
-                  new TerminoCategoria<Publicacion>(nombreDeCategoria),
-                  new TerminoCiudadano<Publicacion>(nombreCiudadano),
-                  new TerminoTexto<Publicacion>("titulo", tituloPublicacion),
-                  new TerminoTexto<Publicacion>("contenido", contenidoPublicacion)
+                  new TerminoTexto<Publicacion>("titulo", tituloPublicacion)
             };
             Publicacion publicacion = BuscarPublicacion(terminosDeBusqueda).FirstOrDefault();
             if (publicacion == null)
