@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using publiquejas.Votos;
 using publiquejas.Exceptions;
+using publiquejas.Excepciones;
 
 namespace XUnitTestProject
 {
@@ -30,7 +31,7 @@ namespace XUnitTestProject
         {
             var modeloCiudadanos = Utilitarios.ObtenerListaModeloCiudadano();
             admin = Utilitarios.GeneradorCiudadanos(admin, modeloCiudadanos, startIndex, endIndex);
-            
+
             return admin;
         }
 
@@ -50,7 +51,7 @@ namespace XUnitTestProject
 
                 admin.AgregarCategoria(nombreCategoria);
             }
-            
+
             return admin;
         }
 
@@ -304,19 +305,66 @@ namespace XUnitTestProject
             Assert.Single(administrador.GetVotosDePublicacion(publicacion1));
             Assert.Equal(TipoVoto.VotoNegativo, administrador.GetVotosDePublicacion(publicacion1, TipoVoto.VotoNegativo).FirstOrDefault().TipoVoto);
         }
-    }
 
     // AgregarComentarios. Emilio
 
     // AgregarComentarioAPublicacionNoExistente. Martin
 
-    // EliminarComentarios.
+        // EliminarComentarios.
 
-    // ActualizarComentarios.
+        // ActualizarComentarios.
 
-    // AgregarCategorias.
+        // AgregarCategorias.
+        [Fact]
+        public void AgregarCategoriaValida()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            string nombreCategoria = "CategoriaNueva";
 
-    // ModificarCategorias.
+            administrador.AgregarCategoria(nombreCategoria);
 
-    // EliminarCategorias.
+            Assert.True(administrador.Categorias.Count > 0, "la lista de publicaciones esta vacia");
+            Assert.Equal(administrador.Categorias[0].Nombre, nombreCategoria);
+        }
+
+        [Fact]
+        public void AgregarCategoriaConNombreVacio()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            string nombreCategoria = "";
+
+            Assert.Throws<CategoriaConNombreVacio>(
+                () => administrador.AgregarCategoria(nombreCategoria)
+            );
+            Assert.Empty(administrador.Categorias);
+        }
+
+        [Fact]
+        public void AgregarCategoriaConCaracteresIvalidos()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            string nombreCategoria = "@/Invalido";
+
+            Assert.Throws<CategoriaConNombreTieneCaracteresInvalidos>(
+                () => administrador.AgregarCategoria(nombreCategoria)
+            );
+            Assert.Empty(administrador.Categorias);
+        }
+
+        [Fact]
+        public void AgregarCategoriaConNombreDuplicado()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            string nombreCategoria = "Duplicado";
+            administrador.AgregarCategoria(nombreCategoria);
+            Assert.Throws<CategoriaConNombreDuplicado>(
+                () => administrador.AgregarCategoria(nombreCategoria)
+            );
+            Assert.Equal(1, administrador.Categorias.Count);
+        }
+
+        // ModificarCategorias.
+
+        // EliminarCategorias.
+    }
 }

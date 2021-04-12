@@ -12,12 +12,12 @@ namespace publiquejas
         string _titulo;
         string _contenido;
         Ciudadano _ciudadano;
-        Categoria _categoria;
+        ICategoria _categoria;
 
         public string Titulo { get { return _titulo; } }
         public string Contenido { get { return _contenido; } }
         public Ciudadano Ciudadano { get { return _ciudadano; } }
-        public Categoria Categoria { get { return _categoria; } }
+        public ICategoria Categoria { get { return _categoria; } }
 
         public List<Voto> Votos { get; set; } = new List<Voto>();
 
@@ -28,7 +28,7 @@ namespace publiquejas
             _ciudadano = ciudadano;
         }
 
-        public Publicacion(string titulo, string contenido, Ciudadano ciudadano, Categoria categoria)
+        public Publicacion(string titulo, string contenido, Ciudadano ciudadano, ICategoria categoria)
         {
             _titulo = titulo;
             _contenido = contenido;
