@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace publiquejas
 {
-    public class Categoria
+    public class Categoria : ICategoria
     {
         private string _nombre;
         private List<Publicacion> _publicaciones;
@@ -19,7 +19,7 @@ namespace publiquejas
         }
 
 
-        internal void AgregarPublicacion(Publicacion publicacion)
+        public void AgregarPublicacion(Publicacion publicacion)
         {
             _publicaciones.Add(publicacion);
         }
