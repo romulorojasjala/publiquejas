@@ -70,6 +70,8 @@
     <Compile Include="Ciudadano.cs" />
     <Compile Include="Comentario.cs" />
     <Compile Include="Criterio.cs" />
+    <Compile Include="Excepciones\CiudadanoNoEncontradoExcepcion.cs" />
+    <Compile Include="Excepciones\PublicacionNoEncontradaExcepcion .cs" />
     <Compile Include="ModeloCiudadano.cs" />
     <Compile Include="Publicacion.cs" />
     <Compile Include="PublicacionNoExistenteException.cs" />
@@ -82,6 +84,10 @@
     <Compile Include="TerminoDeBusqueda.cs" />
     <Compile Include="Buscable.cs" />
     <Compile Include="TerminoTexto.cs" />
+    <Compile Include="NombreDeUsuarioDuplicado.cs" />
+    <Compile Include="Votos\Voto.cs" />
+    <Compile Include="Votos\TipoVoto.cs" />
+    <Compile Include="Votos\Votable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

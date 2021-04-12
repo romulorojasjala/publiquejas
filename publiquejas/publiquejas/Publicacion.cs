@@ -1,4 +1,5 @@
-﻿using System;
+﻿using publiquejas.Votos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace publiquejas
 {
-    public class Publicacion : Buscable
+    public class Publicacion : Buscable, Votable
     {
         string _titulo;
         string _contenido;
@@ -19,6 +20,8 @@ namespace publiquejas
         public Ciudadano Ciudadano { get { return _ciudadano; } }
         public Categoria Categoria { get { return _categoria; } }
         public List<Comentario> Comentarios { get { return _comentarios; } }
+
+        public List<Voto> Votos { get; set; } = new List<Voto>();
 
         public Publicacion(string titulo, string contenido, Ciudadano ciudadano)
         {
@@ -48,6 +51,30 @@ namespace publiquejas
             }
 
             return null;
+        }
+
+        public void Votar(Ciudadano ciudadano, TipoVoto tipoVoto)
+        {
+            var voteFound = Votos.FirstOrDefault(v => v.Ciudadano.UserName == ciudadano.UserName && v.Ciudadano.NombreCompleto == ciudadano.NombreCompleto); // TODO: Add comparador para ciudadano
+            if(voteFound != null)
+            { 
+                Votos.Remove(voteFound);
+                if (voteFound.TipoVoto == tipoVoto)
+                    return;
+            }
+            Votos.Add(new Voto(ciudadano, tipoVoto));
+        }
+
+        public IEnumerable<Voto> GetVotos(TipoVoto tipoVoto)
+        {
+            var votosFiltrados = Votos.Where(v => v.TipoVoto == tipoVoto);
+
+            return votosFiltrados;
+        }
+
+        public IEnumerable<Voto> GetVotos()
+        {
+            return Votos;
         }
 
         internal void AgregarComentario(Ciudadano ciudadano, string contenidoComentario)

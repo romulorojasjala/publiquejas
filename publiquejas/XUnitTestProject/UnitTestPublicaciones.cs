@@ -4,6 +4,7 @@ using publiquejas;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using publiquejas.Votos;
 
 namespace XUnitTestProject
 {
@@ -81,9 +82,21 @@ namespace XUnitTestProject
             Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
         }
 
-        // AgregarCiudadanoConNombreDeUsuarioRepetido.
+        [Fact]
+        public void AgregarCiudadanoConNombreDeUsuarioRepetido()
+        {
+            string nombreDeUsuario = "userNameRepetido";
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador.AgregarCiudadano(nombreDeUsuario, "Nombre", "Apellido", DateTime.Now, "lugar");
+            NombreDeUsuarioDuplicado excepcion = Assert.Throws<NombreDeUsuarioDuplicado>(() =>
+                administrador.AgregarCiudadano(nombreDeUsuario, "Nombre1", "Apellido1", DateTime.Now, "lugar2"));
+            Assert.Equal(1, administrador.Ciudadanos.Count);
+            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+            Assert.Equal(NombreDeUsuarioDuplicado.MensajeDeError, excepcion.Message);
+            Assert.Equal(nombreDeUsuario, excepcion.NombreDeUsuario);
+        }
 
-        // AgregarCiudadanoConMenosDe18Años.
+        // AgregarCiudadanoConMenosDe18A?os.
 
         // ActualizarLugarDeCiudadano.
 
@@ -188,6 +201,61 @@ namespace XUnitTestProject
             };
             var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
             Assert.Empty(ciudadanosEncontrados);
+        }
+
+        [Fact]
+        public void VotarAFavorPorUnaPublicacion()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador, 10, 20);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+
+            var publicacion1 = administrador.Publicaciones.FirstOrDefault();
+            var ciudadano1 = administrador.Ciudadanos.FirstOrDefault();
+            var ciudadano2 = administrador.Ciudadanos[1];
+
+            administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
+            administrador.VotarPublicacion(publicacion1, ciudadano2, TipoVoto.VotoPositivo);
+
+            Assert.Equal(2, administrador.GetVotosDePublicacion(publicacion1, TipoVoto.VotoPositivo).Count());
+        }
+
+        [Fact]
+        public void VotarPorUnaPublicacionPostivamenteDosVecesDeberiaQuedarSinVoto()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador, 10, 20);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+
+            var publicacion1 = administrador.Publicaciones.FirstOrDefault();
+            var ciudadano1 = administrador.Ciudadanos.FirstOrDefault();
+            var ciudadano2 = administrador.Ciudadanos[1];
+
+            administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
+            administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
+
+            Assert.Empty(administrador.GetVotosDePublicacion(publicacion1));
+        }
+
+        [Fact]
+        public void VotarPorUnaPublicacionPostivamentePrimeroYLuegoNegativamenteDeberiaQuedarConElUltimoTipoDeVoto()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador, 10, 20);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+
+            var publicacion1 = administrador.Publicaciones.FirstOrDefault();
+            var ciudadano1 = administrador.Ciudadanos.FirstOrDefault();
+            var ciudadano2 = administrador.Ciudadanos[1];
+
+            administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoPositivo);
+            administrador.VotarPublicacion(publicacion1, ciudadano1, TipoVoto.VotoNegativo);
+
+            Assert.Single(administrador.GetVotosDePublicacion(publicacion1));
+            Assert.Equal(TipoVoto.VotoNegativo, administrador.GetVotosDePublicacion(publicacion1, TipoVoto.VotoNegativo).FirstOrDefault().TipoVoto);
         }
 
         [Fact]
