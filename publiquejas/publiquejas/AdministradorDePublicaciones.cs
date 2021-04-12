@@ -14,6 +14,7 @@ namespace publiquejas
         private List<ICategoria> _categorias;
         private List<Publicacion> _publicaciones;
         private IValidadorCategoria _validadorCategoria;
+        private AdministradorDeUsuarios _adminDeUsuarios;
 
         public AdministradorDePublicaciones()
         {
@@ -25,41 +26,14 @@ namespace publiquejas
             _categorias = new List<ICategoria>();
             _publicaciones = new List<Publicacion>();
             _validadorCategoria = serviceProvider.GetService<IValidadorCategoria>();
+            _adminDeUsuarios = new AdministradorDeUsuarios();
         }
 
-        public IList<Ciudadano> Ciudadanos => _ciudadanos.AsReadOnly();
         public IList<Publicacion> Publicaciones => _publicaciones.AsReadOnly();
         public IList<ICategoria> Categorias => _categorias.AsReadOnly();
 
-        public void AgregarCiudadano(string nombreDeUsuario, string nombre, string apellido, DateTime fechaDeNacimiento, string ubicacion) 
-        {
-            Ciudadano ciudadanoDuplicado = _ciudadanos.Find((ciudadanoBuscado) => ciudadanoBuscado.UserName == nombreDeUsuario);
-
-            if (ciudadanoDuplicado != null)
-            {
-                throw new NombreDeUsuarioDuplicado(nombreDeUsuario);
-            }
-
-            var ciudadano = new Ciudadano(nombreDeUsuario, nombre, apellido, fechaDeNacimiento, new Ubicacion(ubicacion));
-            _ciudadanos.Add(ciudadano);
-        }
-
-        public void ActualizarUbicacionCiudadano(string userName, string nuevaUbicacion)
-        {
-            Ciudadano ciudadano = BuscarCiudadano(userName);
-
-            if (ciudadano == null)
-            {
-                throw new ActualizacionUbicacionUserNameCiudadanoException(userName);
-            }
-
-            if(string.IsNullOrEmpty(nuevaUbicacion))
-            {
-                throw new ActualizacionUbicacionNuevaUbicacionException(nuevaUbicacion);
-            }
-
-            ciudadano.ActualizarUbicacion(ubicacion: nuevaUbicacion);
-        }
+        public AdministradorDeUsuarios AdminDeUsuarios { get { return _adminDeUsuarios; } }
+        
         public void AgregarCategoria(string nombreDeCategoria)
         {            
             Categoria categoria = new Categoria(nombreDeCategoria);
@@ -70,7 +44,7 @@ namespace publiquejas
 
         public void AgregarPublicacion(string userNameDeCiudadano, string titulo, string contenido, string nombreDeCategoria)
         {
-            Ciudadano ciudadano = BuscarCiudadano(userNameDeCiudadano);
+            Ciudadano ciudadano = _adminDeUsuarios.BuscarCiudadano(userNameDeCiudadano);
             ICategoria categoria = AdministradorDePublicaciones.BuscarCategoria(nombreDeCategoria, _categorias);
 
             if (ciudadano != null && categoria != null) {
@@ -78,11 +52,6 @@ namespace publiquejas
                 categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
             }
-        }
-
-        private Ciudadano BuscarCiudadano(string userNameDeCiudadano)
-        {
-            return _ciudadanos.Where(ciudadano => ciudadano.UserName.Equals(userNameDeCiudadano)).FirstOrDefault();
         }
 
         public static ICategoria BuscarCategoria(string nombreDeCategoria, IList<ICategoria> categorias)
@@ -102,24 +71,12 @@ namespace publiquejas
             return publicaciones;
         }
 
-        public List<Ciudadano> BuscarCiudadanos(List<TerminoDeBusqueda<Ciudadano>> terminosDeBusqueda)
-        {
-            var ciudadanos = _ciudadanos;
-
-            terminosDeBusqueda.ForEach(termino =>
-            {
-                ciudadanos = termino.filtrar(ciudadanos);
-            });
-
-            return ciudadanos;
-        }
-
         public void VotarPublicacion(Publicacion publicacion, Ciudadano ciudadano, TipoVoto tipoVoto)
         {
             var publicacionEncontrada = Publicaciones.FirstOrDefault(p => p == publicacion);
             if (publicacionEncontrada == null)
                 throw new PublicacionNoEncontradaExcepcion();
-            var ciudadanoEncontrado = Ciudadanos.FirstOrDefault(c => c == ciudadano);
+            var ciudadanoEncontrado = _adminDeUsuarios.BuscarCiudadano(ciudadano);
             if (ciudadanoEncontrado == null)
                 throw new CiudadanoNoEncontradoExcepcion();
 
@@ -144,4 +101,5 @@ namespace publiquejas
             return publicacionEncontrada.GetVotos(tipoVoto);
         }
     }
+
 }

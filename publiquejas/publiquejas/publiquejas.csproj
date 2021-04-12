@@ -72,8 +72,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdministradorDePublicaciones.cs" />
+    <Compile Include="AdministradorDeUsuarios.cs" />
     <Compile Include="Categoria.cs" />
     <Compile Include="Ciudadano.cs" />
+    <Compile Include="CiudadanoInexistente.cs" />
     <Compile Include="Excepciones\CategoriaConNombreTieneCaracteresInvalidos.cs" />
     <Compile Include="Excepciones\CategoriaConNombreDuplicado.cs" />
     <Compile Include="Excepciones\CategoriaConNombreVacio.cs" />
