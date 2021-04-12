@@ -71,6 +71,8 @@
     <Compile Include="Criterio.cs" />
     <Compile Include="Excepciones\CiudadanoNoEncontradoExcepcion.cs" />
     <Compile Include="Excepciones\PublicacionNoEncontradaExcepcion .cs" />
+    <Compile Include="Exceptions\ActualizacionUbicacionNuevaUbicacionException.cs" />
+    <Compile Include="Exceptions\ActualizacionUbicacionUserNameCiudadanoException.cs" />
     <Compile Include="ModeloCiudadano.cs" />
     <Compile Include="Publicacion.cs" />
     <Compile Include="Ranking.cs" />
