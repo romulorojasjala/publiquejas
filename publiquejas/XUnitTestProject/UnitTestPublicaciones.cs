@@ -258,8 +258,6 @@ namespace XUnitTestProject
             Assert.Single(administrador.GetVotosDePublicacion(publicacion1));
             Assert.Equal(TipoVoto.VotoNegativo, administrador.GetVotosDePublicacion(publicacion1, TipoVoto.VotoNegativo).FirstOrDefault().TipoVoto);
         }
-    }
-
 
         // AgregarComentarios.
 
