@@ -12,13 +12,13 @@ namespace publiquejas
         string _titulo;
         string _contenido;
         Ciudadano _ciudadano;
-        Categoria _categoria;
+        ICategoria _categoria;
         List<Comentario> _comentarios;
 
         public string Titulo { get { return _titulo; } }
         public string Contenido { get { return _contenido; } }
         public Ciudadano Ciudadano { get { return _ciudadano; } }
-        public Categoria Categoria { get { return _categoria; } }
+        public ICategoria Categoria { get { return _categoria; } }
         public List<Comentario> Comentarios { get { return _comentarios; } }
 
         public List<Voto> Votos { get; set; } = new List<Voto>();
@@ -31,7 +31,7 @@ namespace publiquejas
             _comentarios = new List<Comentario>();
         }
 
-        public Publicacion(string titulo, string contenido, Ciudadano ciudadano, Categoria categoria)
+        public Publicacion(string titulo, string contenido, Ciudadano ciudadano, ICategoria categoria)
         {
             _titulo = titulo;
             _contenido = contenido;
@@ -77,7 +77,7 @@ namespace publiquejas
             return Votos;
         }
 
-        internal void AgregarComentario(Ciudadano ciudadano, string contenidoComentario)
+        public void AgregarComentario(Ciudadano ciudadano, string contenidoComentario)
         {
             Comentario comentario = new Comentario(ciudadano, contenidoComentario);
             _comentarios.Add(comentario);

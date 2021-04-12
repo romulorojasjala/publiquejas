@@ -1,10 +1,12 @@
-using System;
+﻿using System;
 using Xunit;
 using publiquejas;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using publiquejas.Votos;
+using publiquejas.Exceptions;
+using publiquejas.Excepciones;
 
 namespace XUnitTestProject
 {
@@ -29,7 +31,7 @@ namespace XUnitTestProject
         {
             var modeloCiudadanos = Utilitarios.ObtenerListaModeloCiudadano();
             admin = Utilitarios.GeneradorCiudadanos(admin, modeloCiudadanos, startIndex, endIndex);
-            
+
             return admin;
         }
 
@@ -49,7 +51,7 @@ namespace XUnitTestProject
 
                 admin.AgregarCategoria(nombreCategoria);
             }
-            
+
             return admin;
         }
 
@@ -95,12 +97,58 @@ namespace XUnitTestProject
             Assert.Equal(NombreDeUsuarioDuplicado.MensajeDeError, excepcion.Message);
             Assert.Equal(nombreDeUsuario, excepcion.NombreDeUsuario);
         }
+        // AgregarCiudadanoConNombreDeUsuarioRepetido. Daniela
+
+        // AgregarCiudadanoConMenosDe18A�os. Carlos 
+
+        // ActualizarLugarDeCiudadano. Carlos
+        [Fact]
+        public void ActualizarLugarDeCiudadano()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
+            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+            
+            administrador.ActualizarUbicacionCiudadano("userName", "newLugar");
+
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Ciudadano>>
+            {
+                new TerminoTexto<Ciudadano>("UserName", "userName")
+            };
+
+            var ciudadanosEncontrados = administrador.BuscarCiudadanos(terminosDeBusqueda);
+            Assert.Single(ciudadanosEncontrados);
+            Assert.Equal("newLugar", ciudadanosEncontrados.First().Ubicacion);
+        }
+
+        [Fact]
+        public void ActualizarLugarDeCiudadanoConUserNameInvalido()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
+            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
 
         // AgregarCiudadanoConMenosDe18A?os.
+            ActualizacionUbicacionUserNameCiudadanoException exception = Assert.Throws<ActualizacionUbicacionUserNameCiudadanoException>(() => administrador.ActualizarUbicacionCiudadano("userNameError", "newLugar"));
+            Assert.Equal(ActualizacionUbicacionUserNameCiudadanoException.GetMessage, exception.Message);
 
-        // ActualizarLugarDeCiudadano.
+        }
 
-        // EliminarCiudadanoYAnonimizarElCiudadanoEnLasPublicacionesCategoriasComentariosCreadas.
+        [Fact]
+        public void ActualizarLugarDeCiudadanoConNuevaUbicacionInvalida()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador.AgregarCiudadano("userName", "Nombre", "Apellido", DateTime.Now, "lugar");
+            Assert.True(administrador.Ciudadanos.Count > 0, "La lista de ciudadanos esta vacia");
+            Assert.Equal("Nombre Apellido", administrador.Ciudadanos[0].NombreCompleto);
+
+            ActualizacionUbicacionNuevaUbicacionException exception = Assert.Throws<ActualizacionUbicacionNuevaUbicacionException>(() => administrador.ActualizarUbicacionCiudadano("userName", ""));
+            Assert.Equal(ActualizacionUbicacionNuevaUbicacionException.GetMessage, exception.Message);
+        }
+
+        // EliminarCiudadanoYAnonimizarElCiudadanoEnLasPublicacionesCategoriasComentariosCreadas. Maria
         // En realidad seria eliminar datos personales del usuario y reemplando su nombre de usuario por uno generico.
 
         // EliminarCiudadanoNoExistente.
@@ -160,13 +208,13 @@ namespace XUnitTestProject
             Assert.Empty(publicacionesEncontradas);
         }
 
-        // ***MODIFICAR LAS PUBLICACIONES DE TAL FORMA QUE NO USEN CATEGORIAS COMO TEXTO, DEBEN USAR CATEGORIAS COMO OBJETOS***
+        // ***MODIFICAR LAS PUBLICACIONES DE TAL FORMA QUE NO USEN CATEGORIAS COMO TEXTO, DEBEN USAR CATEGORIAS COMO OBJETOS*** Erick
 
         // ModificarTituloY/OContenidoDePublicacionQueAunNoFueRankeadaOComentada.
 
         // EliminarPublicacionesQueNoTienenComentariosYNoEstanEnUnRanking.
 
-        // AgregarOQuitarCategoriasEnPublicacionesYaCreadas.
+        // AgregarOQuitarCategoriasEnPublicacionesYaCreadas. Ariel
 
         // Votar a favor o en contra de publicaciones, la votacion debe ser realizada por un ciudadano valido.
 
@@ -285,17 +333,65 @@ namespace XUnitTestProject
         }
     }
 
-    // AgregarComentarios.
+    // AgregarComentarios. Emilio
 
-    // AgregarComentarioAPublicacionNoExistente.
+    // AgregarComentarioAPublicacionNoExistente. Martin
 
-    // EliminarComentarios.
+        // EliminarComentarios.
 
-    // ActualizarComentarios.
+        // ActualizarComentarios.
 
-    // AgregarCategorias.
+        // AgregarCategorias.
+        [Fact]
+        public void AgregarCategoriaValida()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            string nombreCategoria = "CategoriaNueva";
 
-    // ModificarCategorias.
+            administrador.AgregarCategoria(nombreCategoria);
 
-    // EliminarCategorias.
+            Assert.True(administrador.Categorias.Count > 0, "la lista de publicaciones esta vacia");
+            Assert.Equal(administrador.Categorias[0].Nombre, nombreCategoria);
+        }
+
+        [Fact]
+        public void AgregarCategoriaConNombreVacio()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            string nombreCategoria = "";
+
+            Assert.Throws<CategoriaConNombreVacio>(
+                () => administrador.AgregarCategoria(nombreCategoria)
+            );
+            Assert.Empty(administrador.Categorias);
+        }
+
+        [Fact]
+        public void AgregarCategoriaConCaracteresIvalidos()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            string nombreCategoria = "@/Invalido";
+
+            Assert.Throws<CategoriaConNombreTieneCaracteresInvalidos>(
+                () => administrador.AgregarCategoria(nombreCategoria)
+            );
+            Assert.Empty(administrador.Categorias);
+        }
+
+        [Fact]
+        public void AgregarCategoriaConNombreDuplicado()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            string nombreCategoria = "Duplicado";
+            administrador.AgregarCategoria(nombreCategoria);
+            Assert.Throws<CategoriaConNombreDuplicado>(
+                () => administrador.AgregarCategoria(nombreCategoria)
+            );
+            Assert.Equal(1, administrador.Categorias.Count);
+        }
+
+        // ModificarCategorias.
+
+        // EliminarCategorias.
+    }
 }
