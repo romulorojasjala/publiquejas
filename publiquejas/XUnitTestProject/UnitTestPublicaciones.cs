@@ -234,6 +234,27 @@ namespace XUnitTestProject
 
         // ModificarTituloY/OContenidoDePublicacionQueAunNoFueRankeadaOComentada.
 
+        [Fact]
+        public void ModificarTituloYOContenidoDePublicacionQueAunNoFueRankeadaOComentada()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador = CrearCiudadanos(administrador);
+            administrador = CrearCategorias(administrador);
+            string titulo = "Titulo";
+            administrador.AgregarPublicacion(administrador.Ciudadanos[0].UserName, titulo, "Contenido", administrador.Categorias[0].Nombre);
+            string nuevoTitulo = "Nuevo Titulo";
+            string nuevoContenido = "Nuevo Contenido";
+            Ciudadano ciudadanoAutorizado = administrador.Ciudadanos[0];
+            NuevosDatosPublicacion nuevosDatosPublicacion = new NuevosDatosPublicacion()
+            {
+                Titulo = nuevoTitulo,
+                Contenido = nuevoContenido,
+            };
+            administrador.ActualizarPublicacion(titulo, nuevosDatosPublicacion, ciudadanoAutorizado);
+            Assert.True(administrador.Publicaciones[0].Titulo == nuevoTitulo, "el titulo de la publicacion no se actualizo");
+            Assert.True(administrador.Publicaciones[0].Contenido == nuevoContenido, "el contenido de la publicacion no se actualizo");
+        }
+
         // EliminarPublicacionesQueNoTienenComentariosYNoEstanEnUnRanking.
 
         // AgregarOQuitarCategoriasEnPublicacionesYaCreadas. Ariel

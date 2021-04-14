@@ -54,6 +54,25 @@ namespace publiquejas
             }
         }       
 
+        public void ActualizarPublicacion(string tituloPublicacion, NuevosDatosPublicacion nuevosDatos, Ciudadano ciudadanoAutorizado)
+        {
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
+            {
+                new TerminoTexto<Publicacion>("Titulo", tituloPublicacion)
+            };
+            var publicacionesEncontradas = this.BuscarPublicacion(terminosDeBusqueda);
+            if (publicacionesEncontradas.Count == 0)
+                throw new PublicacionNoExistenteException();
+            terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
+            {
+                new TerminoTexto<Publicacion>("Titulo", nuevosDatos.Titulo)
+            };
+            var publicacionesRepetidas = this.BuscarPublicacion(terminosDeBusqueda);
+            if (publicacionesRepetidas.Count > 0)
+                throw new TituloDePublicacionRepetida();
+            publicacionesEncontradas.First().Editar(nuevosDatos, ciudadanoAutorizado);
+        }
+
         public void EliminarPublicacion(string titulo)
         {
              var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>()
