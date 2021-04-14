@@ -52,7 +52,7 @@ namespace publiquejas
                 categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
             }
-        }
+        }       
 
         public void EliminarPublicacion(string titulo)
         {
@@ -125,6 +125,10 @@ namespace publiquejas
             Ciudadano ciudadano = _adminDeUsuarios.BuscarCiudadano(nombreCiudadano);
             publicacion.AgregarComentario(ciudadano, contenidoComentario);
         }
+       
+
+
+
     }
 
 }

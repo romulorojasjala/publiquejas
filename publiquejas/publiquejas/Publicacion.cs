@@ -31,6 +31,8 @@ namespace publiquejas
             _comentarios = new List<Comentario>();
         }
 
+      
+
         public Publicacion(string titulo, string contenido, Ciudadano ciudadano, ICategoria categoria)
         {
             _titulo = titulo;
@@ -82,5 +84,6 @@ namespace publiquejas
             Comentario comentario = new Comentario(ciudadano, contenidoComentario);
             _comentarios.Add(comentario);
         }
+        
     }
 }

@@ -72,7 +72,7 @@ namespace XUnitTestProject
             }
 
             return admin;
-        }
+        }    
 
 
         [Fact]
@@ -355,17 +355,40 @@ namespace XUnitTestProject
                 Assert.Equal(PublicacionNoExistenteException.MensajeDeError, e.Message);
             }
         }
-
         // AgregarComentarios. Emilio
-
-        // AgregarComentarioAPublicacionNoExistente. Martin
-
-        // EliminarComentarios.
-
-        // ActualizarComentarios.
-
-        // AgregarCategorias.
         [Fact]
+        public void AgregarComentarioAPublicacion()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador = CrearCiudadanos(administrador);
+            administrador = CrearCategorias(administrador);
+            administrador = CrearPublicaciones(administrador);
+            var buscarCatergoria = administrador.Categorias.First().Nombre;
+            var terminoDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
+            {
+                new TerminoCategoria<Publicacion>(buscarCatergoria)
+            };
+
+            var publicacionAComentar = administrador.BuscarPublicacion(terminoDeBusqueda).First();
+            var ciudadano = publicacionAComentar.Ciudadano;
+           
+            administrador.AgregarComentario(ciudadano.NombreCompleto, publicacionAComentar.Titulo, "textoComentario");
+
+            Assert.True(publicacionAComentar.Comentarios.Count > 0, "la lista de comentarios esta vacia");
+            Assert.Equal("textoComentario",publicacionAComentar.Comentarios[0].Contenido );
+
+        }  
+
+
+
+            // AgregarComentarioAPublicacionNoExistente. Martin
+
+            // EliminarComentarios.
+
+            // ActualizarComentarios.
+
+            // AgregarCategorias.
+            [Fact]
         public void AgregarCategoriaValida()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();

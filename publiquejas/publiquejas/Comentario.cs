@@ -22,5 +22,6 @@ namespace publiquejas
             _contenido = contenido;
             _fecha = DateTime.Now;
         }
+       
     }
 }
