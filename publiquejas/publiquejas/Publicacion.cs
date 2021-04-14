@@ -11,13 +11,16 @@ namespace publiquejas
     {
         string _titulo;
         string _contenido;
-        Ciudadano _ciudadano;
-        ICategoria _categoria;
+
+        Ciudadano _ciudadano; 
+        
+        List<ICategoria> _categorias = new List<ICategoria>();
 
         public string Titulo { get { return _titulo; } }
         public string Contenido { get { return _contenido; } }
-        public Ciudadano Ciudadano { get { return _ciudadano; } }
-        public ICategoria Categoria { get { return _categoria; } }
+        public Ciudadano Ciudadano { get { return _ciudadano; } }               
+        public IList<ICategoria> Categorias => _categorias.AsReadOnly();
+                
 
         public List<Voto> Votos { get; set; } = new List<Voto>();
 
@@ -32,8 +35,8 @@ namespace publiquejas
         {
             _titulo = titulo;
             _contenido = contenido;
-            _ciudadano = ciudadano;
-            _categoria = categoria;
+            _ciudadano = ciudadano;            
+            _categorias.Add(categoria);
         }
 
         public object getPropertyValue(string propertyName)
@@ -47,6 +50,17 @@ namespace publiquejas
             }
 
             return null;
+        }
+
+        public void agregarCategoria(Categoria categoria)
+        {
+            _categorias.Add(categoria);
+        }
+
+        public void eliminarCategoria(String nombreCategoria)
+        {
+            var indexCategoria = _categorias.FindIndex(cat => cat.Nombre.Equals(nombreCategoria));
+            _categorias.RemoveAt(indexCategoria);
         }
 
         public void Votar(Ciudadano ciudadano, TipoVoto tipoVoto)
