@@ -139,7 +139,7 @@ namespace publiquejas
             Publicacion publicacion = BuscarPublicacion(terminosDeBusqueda).FirstOrDefault();
             if (publicacion == null)
             {
-                throw new PublicacionNoExistenteException();
+                throw new PublicacionNoEncontradaExcepcion(tituloPublicacion);
             }
             Ciudadano ciudadano = _adminDeUsuarios.BuscarCiudadano(nombreCiudadano);
             publicacion.AgregarComentario(ciudadano, contenidoComentario);

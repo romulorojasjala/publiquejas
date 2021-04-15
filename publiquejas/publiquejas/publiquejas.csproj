@@ -95,7 +95,6 @@
     <Compile Include="IEditable.cs" />
     <Compile Include="ModeloCiudadano.cs" />
     <Compile Include="Publicacion.cs" />
-    <Compile Include="PublicacionNoExistenteException.cs" />
     <Compile Include="Ranking.cs" />
     <Compile Include="TerminoCiudadano.cs" />
     <Compile Include="Ubicacion.cs" />

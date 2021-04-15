@@ -424,9 +424,9 @@ namespace XUnitTestProject
             {
                 administrador.AgregarComentario(ciudadano.NombreCompleto, publicacionAEliminar.Titulo, "Comentario");
             }
-            catch (PublicacionNoExistenteException e)
+            catch (PublicacionNoEncontradaExcepcion e)
             {
-                Assert.Equal(PublicacionNoExistenteException.MensajeDeError, e.Message);
+                Assert.Equal(PublicacionNoEncontradaExcepcion.Mensaje, e.Message);
             }
         }
         // AgregarComentarios. Emilio

@@ -50,8 +50,8 @@ namespace publiquejas
             }
             if (nuevosDatos.Titulo == String.Empty || nuevosDatos.Contenido == String.Empty)
                 throw new DatosVaciosPublicacion(this.Titulo);
-            //if (this.Comentarios.Count > 0)
-            //    throw new ActualizacionDePublicacionFallida();
+            if (this.Comentarios.Count > 0)
+                throw new ActualizacionDePublicacionFallida();
             this._titulo = nuevosDatos.Titulo  != null ? nuevosDatos.Titulo : this.Titulo;
             this._contenido = nuevosDatos.Contenido != null ? nuevosDatos.Contenido : this.Contenido;
         }
