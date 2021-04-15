@@ -64,16 +64,6 @@ namespace publiquejas
              _publicaciones.Remove(publicacion);
         }
 
-        public void EliminarPublicacion(string titulo)
-        {
-             var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>()
-             {
-                  new TerminoTexto<Publicacion>("titulo", titulo)
-             };
-             Publicacion publicacion = BuscarPublicacion(terminosDeBusqueda).FirstOrDefault();
-             _publicaciones.Remove(publicacion);
-        }
-
         public static ICategoria BuscarCategoria(string nombreDeCategoria, IList<ICategoria> categorias)
         {
             return categorias.Where(categoria => categoria.Nombre.Equals(nombreDeCategoria)).FirstOrDefault();
