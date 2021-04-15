@@ -54,6 +54,16 @@ namespace publiquejas
             }
         }
 
+        public void EliminarPublicacion(string titulo)
+        {
+             var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>()
+             {
+                  new TerminoTexto<Publicacion>("titulo", titulo)
+             };
+             Publicacion publicacion = BuscarPublicacion(terminosDeBusqueda).FirstOrDefault();
+             _publicaciones.Remove(publicacion);
+        }
+
         public static ICategoria BuscarCategoria(string nombreDeCategoria, IList<ICategoria> categorias)
         {
             return categorias.Where(categoria => categoria.Nombre.Equals(nombreDeCategoria)).FirstOrDefault();
@@ -99,6 +109,21 @@ namespace publiquejas
                 throw new PublicacionNoEncontradaExcepcion();
 
             return publicacionEncontrada.GetVotos(tipoVoto);
+        }
+
+        public void AgregarComentario(string nombreCiudadano, string tituloPublicacion, string contenidoComentario)
+        {
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>()
+            {
+                  new TerminoTexto<Publicacion>("titulo", tituloPublicacion)
+            };
+            Publicacion publicacion = BuscarPublicacion(terminosDeBusqueda).FirstOrDefault();
+            if (publicacion == null)
+            {
+                throw new PublicacionNoExistenteException();
+            }
+            Ciudadano ciudadano = _adminDeUsuarios.BuscarCiudadano(nombreCiudadano);
+            publicacion.AgregarComentario(ciudadano, contenidoComentario);
         }
     }
 

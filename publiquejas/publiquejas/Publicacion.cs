@@ -11,16 +11,15 @@ namespace publiquejas
     {
         string _titulo;
         string _contenido;
-
         Ciudadano _ciudadano; 
-        
         List<ICategoria> _categorias = new List<ICategoria>();
+        List<Comentario> _comentarios;
 
         public string Titulo { get { return _titulo; } }
         public string Contenido { get { return _contenido; } }
         public Ciudadano Ciudadano { get { return _ciudadano; } }               
         public IList<ICategoria> Categorias => _categorias.AsReadOnly();
-                
+        public List<Comentario> Comentarios { get { return _comentarios; } }
 
         public List<Voto> Votos { get; set; } = new List<Voto>();
 
@@ -29,6 +28,7 @@ namespace publiquejas
             _titulo = titulo;
             _contenido = contenido;
             _ciudadano = ciudadano;
+            _comentarios = new List<Comentario>();
         }
 
         public Publicacion(string titulo, string contenido, Ciudadano ciudadano, ICategoria categoria)
@@ -37,6 +37,7 @@ namespace publiquejas
             _contenido = contenido;
             _ciudadano = ciudadano;            
             _categorias.Add(categoria);
+            _comentarios = new List<Comentario>();
         }
 
         public object getPropertyValue(string propertyName)
@@ -85,6 +86,12 @@ namespace publiquejas
         public IEnumerable<Voto> GetVotos()
         {
             return Votos;
+        }
+
+        public void AgregarComentario(Ciudadano ciudadano, string contenidoComentario)
+        {
+            Comentario comentario = new Comentario(ciudadano, contenidoComentario);
+            _comentarios.Add(comentario);
         }
     }
 }

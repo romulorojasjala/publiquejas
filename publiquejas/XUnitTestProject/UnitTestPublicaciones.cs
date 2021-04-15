@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using Xunit;
 using publiquejas;
 using System.Collections.Generic;
@@ -99,7 +99,7 @@ namespace XUnitTestProject
         }
         // AgregarCiudadanoConNombreDeUsuarioRepetido. Daniela
 
-        // AgregarCiudadanoConMenosDe18Años. Carlos 
+        // AgregarCiudadanoConMenosDe18Aï¿½os. Carlos 
 
         // ActualizarLugarDeCiudadano. Carlos
         [Fact]
@@ -383,9 +383,35 @@ namespace XUnitTestProject
             Assert.Equal(TipoVoto.VotoNegativo, administrador.GetVotosDePublicacion(publicacion1, TipoVoto.VotoNegativo).FirstOrDefault().TipoVoto);
         }
 
-    // AgregarComentarios. Emilio
+        [Fact]
+        public void AgregarComentarioAPublicacionNoExistente()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador);
+            CrearCategorias(administrador);
+            CrearPublicaciones(administrador);
+            var categoriaABuscar = administrador.Categorias.First().Nombre;
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
+            {
+                new TerminoCategoria<Publicacion>(categoriaABuscar)
+            };
+            var publicacionAEliminar = administrador.BuscarPublicacion(terminosDeBusqueda).First();
+            var ciudadano = publicacionAEliminar.Ciudadano;
+            administrador.EliminarPublicacion(publicacionAEliminar.Titulo);
 
-    // AgregarComentarioAPublicacionNoExistente. Martin
+            try
+            {
+                administrador.AgregarComentario(ciudadano.NombreCompleto, publicacionAEliminar.Titulo, "Comentario");
+            }
+            catch (PublicacionNoExistenteException e)
+            {
+                Assert.Equal(PublicacionNoExistenteException.MensajeDeError, e.Message);
+            }
+        }
+
+        // AgregarComentarios. Emilio
+
+        // AgregarComentarioAPublicacionNoExistente. Martin
 
         // EliminarComentarios.
 

@@ -81,6 +81,7 @@
     <Compile Include="Excepciones\CategoriaConNombreVacio.cs" />
     <Compile Include="ValidadorCategoria.cs" />
     <Compile Include="Criterio.cs" />
+    <Compile Include="Comentario.cs" />
     <Compile Include="Excepciones\CiudadanoNoEncontradoExcepcion.cs" />
     <Compile Include="Excepciones\PublicacionNoEncontradaExcepcion .cs" />
     <Compile Include="Exceptions\ActualizacionUbicacionNuevaUbicacionException.cs" />
@@ -89,7 +90,9 @@
     <Compile Include="IValidadorCategoria.cs" />
     <Compile Include="ModeloCiudadano.cs" />
     <Compile Include="Publicacion.cs" />
+    <Compile Include="PublicacionNoExistenteException.cs" />
     <Compile Include="Ranking.cs" />
+    <Compile Include="TerminoCiudadano.cs" />
     <Compile Include="Ubicacion.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
