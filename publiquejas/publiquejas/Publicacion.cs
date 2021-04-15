@@ -6,7 +6,7 @@ using publiquejas.Excepciones;
 
 namespace publiquejas
 {
-    public class Publicacion : Buscable, Votable, IEditable<NuevosDatosPublicacion>
+    public class Publicacion : Buscable, Votable, IEditable<DatosEditablesPublicacion>
     {
         string _titulo;
         string _contenido;
@@ -41,12 +41,15 @@ namespace publiquejas
             _comentarios = new List<Comentario>();
         }
 
-        public void Editar(NuevosDatosPublicacion nuevosDatos, Ciudadano ciudadanoAutorizado)
+        public void Editar(DatosEditablesPublicacion nuevosDatos, Ciudadano ciudadanoAutorizado)
         {
-            if (ciudadanoAutorizado.UserName != _ciudadano.UserName)
-                throw new AutorizacionDenegada();
+            if (ciudadanoAutorizado == null || ciudadanoAutorizado.UserName != _ciudadano.UserName)
+            {
+                string username = ciudadanoAutorizado != null ? ciudadanoAutorizado.UserName : "ciudadano vacio";
+                throw new AutorizacionDenegada(username);
+            }
             if (nuevosDatos.Titulo == String.Empty || nuevosDatos.Contenido == String.Empty)
-                throw new DatosErradosPublicacion();
+                throw new DatosVaciosPublicacion(this.Titulo);
             //if (this.Comentarios.Count > 0)
             //    throw new ActualizacionDePublicacionFallida();
             this._titulo = nuevosDatos.Titulo  != null ? nuevosDatos.Titulo : this.Titulo;
@@ -107,7 +110,7 @@ namespace publiquejas
             _comentarios.Add(comentario);
         }
     }
-    public struct NuevosDatosPublicacion : INuevosDatos
+    public struct DatosEditablesPublicacion : INuevosDatos
     {
         public string Titulo { get; set; }
         public string Contenido { get; set; }

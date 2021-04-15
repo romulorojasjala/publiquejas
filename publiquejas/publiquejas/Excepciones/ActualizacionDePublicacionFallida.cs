@@ -4,6 +4,10 @@ namespace publiquejas.Excepciones
 {
     public class ActualizacionDePublicacionFallida : Exception
     {
-        public readonly string mensaje = "No se pudo actualizar la publicacion porq tiene comentarios o esta en un ranking";
+        public const string Mensaje = "No se pudo actualizar la publicacion.";
+        public ActualizacionDePublicacionFallida() : base(Mensaje)
+        {
+
+        }
     }
 }

@@ -235,17 +235,17 @@ namespace XUnitTestProject
         // ModificarTituloY/OContenidoDePublicacionQueAunNoFueRankeadaOComentada.
 
         [Fact]
-        public void ModificarTituloYOContenidoDePublicacionQueAunNoFueRankeadaOComentada()
+        public void ModificarTituloYOContenidoDePublicacionQueAunNoFueComentada()
         {
             AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
             administrador = CrearCiudadanos(administrador);
             administrador = CrearCategorias(administrador);
             string titulo = "Titulo";
-            administrador.AgregarPublicacion(administrador.Ciudadanos[0].UserName, titulo, "Contenido", administrador.Categorias[0].Nombre);
+            administrador.AgregarPublicacion(administrador.AdminDeUsuarios.GetCiudadano(0).UserName, titulo, "Contenido", administrador.Categorias[0].Nombre);
             string nuevoTitulo = "Nuevo Titulo";
             string nuevoContenido = "Nuevo Contenido";
-            Ciudadano ciudadanoAutorizado = administrador.Ciudadanos[0];
-            NuevosDatosPublicacion nuevosDatosPublicacion = new NuevosDatosPublicacion()
+            Ciudadano ciudadanoAutorizado = administrador.AdminDeUsuarios.GetCiudadano(0);
+            DatosEditablesPublicacion nuevosDatosPublicacion = new DatosEditablesPublicacion()
             {
                 Titulo = nuevoTitulo,
                 Contenido = nuevoContenido,

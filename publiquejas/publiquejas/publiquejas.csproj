@@ -84,14 +84,13 @@
     <Compile Include="Comentario.cs" />
     <Compile Include="Excepciones\AutorizacionDenegada.cs" />
     <Compile Include="Excepciones\CiudadanoNoEncontradoExcepcion.cs" />
-    <Compile Include="Excepciones\DatosErradosPublicacion.cs" />
+    <Compile Include="Excepciones\DatosVaciosPublicacion.cs" />
     <Compile Include="Excepciones\PublicacionNoEncontradaExcepcion .cs" />
     <Compile Include="Exceptions\ActualizacionUbicacionNuevaUbicacionException.cs" />
     <Compile Include="Exceptions\ActualizacionUbicacionUserNameCiudadanoException.cs" />
     <Compile Include="ICategoria.cs" />
     <Compile Include="IValidadorCategoria.cs" />
     <Compile Include="Excepciones\ActualizacionDePublicacionFallida.cs" />
-    <Compile Include="Excepciones\PublicacionNoExistenteException.cs" />
     <Compile Include="Excepciones\TituloDePublicacionRepetida.cs" />
     <Compile Include="IEditable.cs" />
     <Compile Include="ModeloCiudadano.cs" />

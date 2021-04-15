@@ -54,7 +54,7 @@ namespace publiquejas
             }
         }       
 
-        public void ActualizarPublicacion(string tituloPublicacion, NuevosDatosPublicacion nuevosDatos, Ciudadano ciudadanoAutorizado)
+        public void ActualizarPublicacion(string tituloPublicacion, DatosEditablesPublicacion nuevosDatos, Ciudadano ciudadanoAutorizado)
         {
             var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
             {
@@ -62,14 +62,14 @@ namespace publiquejas
             };
             var publicacionesEncontradas = this.BuscarPublicacion(terminosDeBusqueda);
             if (publicacionesEncontradas.Count == 0)
-                throw new PublicacionNoExistenteException();
+                throw new PublicacionNoEncontradaExcepcion(tituloPublicacion);
             terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
             {
                 new TerminoTexto<Publicacion>("Titulo", nuevosDatos.Titulo)
             };
             var publicacionesRepetidas = this.BuscarPublicacion(terminosDeBusqueda);
             if (publicacionesRepetidas.Count > 0)
-                throw new TituloDePublicacionRepetida();
+                throw new TituloDePublicacionRepetida(nuevosDatos.Titulo);
             publicacionesEncontradas.First().Editar(nuevosDatos, ciudadanoAutorizado);
         }
 
