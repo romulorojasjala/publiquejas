@@ -11,9 +11,7 @@ namespace publiquejas
     {
         string _titulo;
         string _contenido;
-
-        Ciudadano _ciudadano;
-        
+        Ciudadano _ciudadano; 
         List<ICategoria> _categorias = new List<ICategoria>();
         List<Comentario> _comentarios;
 
@@ -97,6 +95,5 @@ namespace publiquejas
             Comentario comentario = new Comentario(ciudadano, contenidoComentario);
             _comentarios.Add(comentario);
         }
-        
     }
 }
