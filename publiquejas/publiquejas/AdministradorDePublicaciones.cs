@@ -52,6 +52,16 @@ namespace publiquejas
                 categoria.AgregarPublicacion(publicacion);
                 _publicaciones.Add(publicacion);
             }
+        }       
+
+        public void EliminarPublicacion(string titulo)
+        {
+             var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>()
+             {
+                  new TerminoTexto<Publicacion>("titulo", titulo)
+             };
+             Publicacion publicacion = BuscarPublicacion(terminosDeBusqueda).FirstOrDefault();
+             _publicaciones.Remove(publicacion);
         }
 
         public void EliminarPublicacion(string titulo)
