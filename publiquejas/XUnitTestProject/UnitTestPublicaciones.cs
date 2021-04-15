@@ -234,6 +234,27 @@ namespace XUnitTestProject
 
         // ModificarTituloY/OContenidoDePublicacionQueAunNoFueRankeadaOComentada.
 
+        [Fact]
+        public void ModificarTituloYOContenidoDePublicacionQueAunNoFueComentada()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador = CrearCiudadanos(administrador);
+            administrador = CrearCategorias(administrador);
+            string titulo = "Titulo";
+            administrador.AgregarPublicacion(administrador.AdminDeUsuarios.GetCiudadano(0).UserName, titulo, "Contenido", administrador.Categorias[0].Nombre);
+            string nuevoTitulo = "Nuevo Titulo";
+            string nuevoContenido = "Nuevo Contenido";
+            Ciudadano ciudadanoAutorizado = administrador.AdminDeUsuarios.GetCiudadano(0);
+            DatosEditablesPublicacion nuevosDatosPublicacion = new DatosEditablesPublicacion()
+            {
+                Titulo = nuevoTitulo,
+                Contenido = nuevoContenido,
+            };
+            administrador.ActualizarPublicacion(titulo, nuevosDatosPublicacion, ciudadanoAutorizado);
+            Assert.True(administrador.Publicaciones[0].Titulo == nuevoTitulo, "el titulo de la publicacion no se actualizo");
+            Assert.True(administrador.Publicaciones[0].Contenido == nuevoContenido, "el contenido de la publicacion no se actualizo");
+        }
+
         // EliminarPublicacionesQueNoTienenComentariosYNoEstanEnUnRanking.
 
         // AgregarOQuitarCategoriasEnPublicacionesYaCreadas. Ariel
@@ -403,9 +424,9 @@ namespace XUnitTestProject
             {
                 administrador.AgregarComentario(ciudadano.NombreCompleto, publicacionAEliminar.Titulo, "Comentario");
             }
-            catch (PublicacionNoExistenteException e)
+            catch (PublicacionNoEncontradaExcepcion e)
             {
-                Assert.Equal(PublicacionNoExistenteException.MensajeDeError, e.Message);
+                Assert.Equal(PublicacionNoEncontradaExcepcion.Mensaje, e.Message);
             }
         }
         // AgregarComentarios. Emilio

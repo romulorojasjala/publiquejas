@@ -54,6 +54,25 @@ namespace publiquejas
             }
         }       
 
+        public void ActualizarPublicacion(string tituloPublicacion, DatosEditablesPublicacion nuevosDatos, Ciudadano ciudadanoAutorizado)
+        {
+            var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
+            {
+                new TerminoTexto<Publicacion>("Titulo", tituloPublicacion)
+            };
+            var publicacionesEncontradas = this.BuscarPublicacion(terminosDeBusqueda);
+            if (publicacionesEncontradas.Count == 0)
+                throw new PublicacionNoEncontradaExcepcion(tituloPublicacion);
+            terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>
+            {
+                new TerminoTexto<Publicacion>("Titulo", nuevosDatos.Titulo)
+            };
+            var publicacionesRepetidas = this.BuscarPublicacion(terminosDeBusqueda);
+            if (publicacionesRepetidas.Count > 0)
+                throw new TituloDePublicacionRepetida(nuevosDatos.Titulo);
+            publicacionesEncontradas.First().Editar(nuevosDatos, ciudadanoAutorizado);
+        }
+
         public void EliminarPublicacion(string titulo)
         {
              var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>()
@@ -120,7 +139,7 @@ namespace publiquejas
             Publicacion publicacion = BuscarPublicacion(terminosDeBusqueda).FirstOrDefault();
             if (publicacion == null)
             {
-                throw new PublicacionNoExistenteException();
+                throw new PublicacionNoEncontradaExcepcion(tituloPublicacion);
             }
             Ciudadano ciudadano = _adminDeUsuarios.BuscarCiudadano(nombreCiudadano);
             publicacion.AgregarComentario(ciudadano, contenidoComentario);

@@ -1,13 +1,12 @@
-﻿using publiquejas.Votos;
+using publiquejas.Votos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using publiquejas.Excepciones;
 
 namespace publiquejas
 {
-    public class Publicacion : Buscable, Votable
+    public class Publicacion : Buscable, Votable, IEditable<DatosEditablesPublicacion>
     {
         string _titulo;
         string _contenido;
@@ -40,6 +39,21 @@ namespace publiquejas
             _ciudadano = ciudadano;            
             _categorias.Add(categoria);
             _comentarios = new List<Comentario>();
+        }
+
+        public void Editar(DatosEditablesPublicacion nuevosDatos, Ciudadano ciudadanoAutorizado)
+        {
+            if (ciudadanoAutorizado == null || ciudadanoAutorizado.UserName != _ciudadano.UserName)
+            {
+                string username = ciudadanoAutorizado != null ? ciudadanoAutorizado.UserName : "ciudadano vacio";
+                throw new AutorizacionDenegada(username);
+            }
+            if (nuevosDatos.Titulo == String.Empty || nuevosDatos.Contenido == String.Empty)
+                throw new DatosVaciosPublicacion(this.Titulo);
+            if (this.Comentarios.Count > 0)
+                throw new ActualizacionDePublicacionFallida();
+            this._titulo = nuevosDatos.Titulo  != null ? nuevosDatos.Titulo : this.Titulo;
+            this._contenido = nuevosDatos.Contenido != null ? nuevosDatos.Contenido : this.Contenido;
         }
 
         public object getPropertyValue(string propertyName)
@@ -95,5 +109,10 @@ namespace publiquejas
             Comentario comentario = new Comentario(ciudadano, contenidoComentario);
             _comentarios.Add(comentario);
         }
+    }
+    public struct DatosEditablesPublicacion : INuevosDatos
+    {
+        public string Titulo { get; set; }
+        public string Contenido { get; set; }
     }
 }
