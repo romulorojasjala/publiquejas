@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
+using publiquejas.Excepciones;
 
 namespace publiquejas
 {
@@ -10,6 +11,8 @@ namespace publiquejas
         private string _userName;
         private string _nombre;
         private string _apellido;
+        private string _password;
+
         private DateTime _fechaDeNacimiento;
         private Ubicacion _ubicacion;
 
@@ -25,6 +28,24 @@ namespace publiquejas
             _apellido = apellido;
             _fechaDeNacimiento = fechaDeNacimiento;
             _ubicacion = ubicacion;
+        }
+
+        public Ciudadano(string userName, string nombre, string apellido, DateTime fechaDeNacimiento, Ubicacion ubicacion, string password)
+        {
+            _userName = userName;
+            _nombre = nombre;
+            _apellido = apellido;
+            _fechaDeNacimiento = fechaDeNacimiento;
+            _ubicacion = ubicacion;
+            _password = password;
+        }
+
+        public void Autenticar(string password)
+        {
+            if(!password.Equals(_password))
+            {
+                throw new AutenticacionInvalidaException();
+            }
         }
 
         public object getPropertyValue(string propertyName)

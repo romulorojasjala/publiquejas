@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using publiquejas.Excepciones;
 using publiquejas.Exceptions;
 
 namespace publiquejas
@@ -100,5 +99,19 @@ namespace publiquejas
         {
             return _ciudadanos[index];
         }
+
+        public void AutenticarCiudadano (string nombreUsuario, string password)
+        {
+            Ciudadano usuario = BuscarCiudadano(nombreUsuario); 
+            if (usuario == null)
+            {
+                throw new AutenticacionInvalidaException();
+            }
+
+            usuario.Autenticar(password);
+                        
+        }
+
+
     }
 }

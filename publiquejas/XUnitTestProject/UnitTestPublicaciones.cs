@@ -97,6 +97,15 @@ namespace XUnitTestProject
             Assert.Equal(NombreDeUsuarioDuplicado.MensajeDeError, excepcion.Message);
             Assert.Equal(nombreDeUsuario, excepcion.NombreDeUsuario);
         }
+
+        [Fact]
+        public void AutenticarCiudadano()
+        {
+            string nombreUsuario = "Fulanito";
+            string password = "wrongpassword";
+            AdministradorDeUsuarios admin = new AdministradorDeUsuarios();
+            AutenticacionInvalidaException exception = Assert.Throws<AutenticacionInvalidaException>(() => admin.AutenticarCiudadano(nombreUsuario, password));
+        }
         // AgregarCiudadanoConNombreDeUsuarioRepetido. Daniela
 
         // AgregarCiudadanoConMenosDe18A�os. Carlos 
