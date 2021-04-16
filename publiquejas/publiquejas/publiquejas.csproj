@@ -79,6 +79,9 @@
     <Compile Include="Excepciones\CategoriaConNombreTieneCaracteresInvalidos.cs" />
     <Compile Include="Excepciones\CategoriaConNombreDuplicado.cs" />
     <Compile Include="Excepciones\CategoriaConNombreVacio.cs" />
+    <Compile Include="Excepciones\CiudadanoConPermisosInsuficientes.cs" />
+    <Compile Include="Excepciones\PublicacionConComentarios.cs" />
+    <Compile Include="Excepciones\PublicacionConVotos.cs" />
     <Compile Include="ValidadorCategoria.cs" />
     <Compile Include="Criterio.cs" />
     <Compile Include="Comentario.cs" />
