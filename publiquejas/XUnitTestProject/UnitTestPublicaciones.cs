@@ -257,6 +257,85 @@ namespace XUnitTestProject
 
         // EliminarPublicacionesQueNoTienenComentariosYNoEstanEnUnRanking.
 
+        [Fact]
+        public void EliminarPublicacionesQueNoTienenComentariosYNoTienenVotos()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador = CrearCiudadanos(administrador);
+            administrador = CrearCategorias(administrador);
+            administrador.AgregarPublicacion(administrador.AdminDeUsuarios.GetCiudadano(0).UserName, "Titulo",
+                "Contenido", administrador.Categorias[0].Nombre);
+            Publicacion publicacion = administrador.Publicaciones.First();
+            Ciudadano ciudadano = administrador.AdminDeUsuarios.GetCiudadano(0);
+            administrador.EliminarPublicacion(publicacion, ciudadano);
+            Assert.True(administrador.Publicaciones.Count == 0, "la publicaciones no se ha eliminado");
+        }
+
+        [Fact]
+        public void EliminarPublicacionesQueTienenVotos()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador, 10, 20);
+            CrearCategorias(administrador);
+
+            var ciudadano1 = administrador.AdminDeUsuarios.GetCiudadano(0);
+            var ciudadano2 = administrador.AdminDeUsuarios.GetCiudadano(1);
+
+            administrador.AgregarPublicacion(ciudadano1.UserName, "Titulo", "Contenido",
+                administrador.Categorias[0].Nombre);
+            var publicacion = administrador.Publicaciones.FirstOrDefault();
+
+            administrador.VotarPublicacion(publicacion, ciudadano2, TipoVoto.VotoPositivo);
+
+            var excepcion =
+                Assert.Throws<PublicacionConVotos>(() => administrador.EliminarPublicacion(publicacion, ciudadano1));
+            Assert.Equal(PublicacionConVotos.MensajeDeError, excepcion.Message);
+            Assert.Equal(publicacion.Titulo, excepcion.TituloDeDePublicacion);
+            Assert.True(administrador.Publicaciones.Count > 0, "la publicaciones se ha eliminado");
+        }
+
+        [Fact]
+        public void EliminarPublicacionesQueTienenComentarios()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            administrador = CrearCiudadanos(administrador);
+            administrador = CrearCategorias(administrador);
+            administrador.AgregarPublicacion(administrador.AdminDeUsuarios.GetCiudadano(0).UserName, "Titulo",
+                "Contenido", administrador.Categorias[0].Nombre);
+            Publicacion publicacion = administrador.Publicaciones.First();
+            Ciudadano ciudadano = administrador.AdminDeUsuarios.GetCiudadano(0);
+            administrador.AgregarComentario(ciudadano.NombreCompleto, publicacion.Titulo, "textoComentario");
+
+            var excepcion =
+                Assert.Throws<PublicacionConComentarios>(
+                    () => administrador.EliminarPublicacion(publicacion, ciudadano));
+            Assert.Equal(PublicacionConComentarios.MensajeDeError, excepcion.Message);
+            Assert.Equal(publicacion.Titulo, excepcion.TituloDeDePublicacion);
+            Assert.True(administrador.Publicaciones.Count > 0, "la publicaciones se ha eliminado");
+        }
+
+        [Fact]
+        public void EliminarPublicacionDeOtroCiudadano()
+        {
+            AdministradorDePublicaciones administrador = new AdministradorDePublicaciones();
+            CrearCiudadanos(administrador, 10, 20);
+            CrearCategorias(administrador);
+
+            var ciudadano1 = administrador.AdminDeUsuarios.GetCiudadano(0);
+            var ciudadano2 = administrador.AdminDeUsuarios.GetCiudadano(1);
+
+            administrador.AgregarPublicacion(ciudadano1.UserName, "Titulo", "Contenido",
+                administrador.Categorias[0].Nombre);
+            var publicacion = administrador.Publicaciones.FirstOrDefault();
+
+            var excepcion =
+                Assert.Throws<CiudadanoConPermisosInsuficientes>(() =>
+                    administrador.EliminarPublicacion(publicacion, ciudadano2));
+            Assert.Equal(CiudadanoConPermisosInsuficientes.MensajeDeError, excepcion.Message);
+            Assert.Equal(ciudadano2.NombreCompleto, excepcion.NombreDelCiudadano);
+            Assert.True(administrador.Publicaciones.Count > 0, "la publicaciones se ha eliminado");
+        }
+
         // AgregarOQuitarCategoriasEnPublicacionesYaCreadas. Ariel
 
         // Votar a favor o en contra de publicaciones, la votacion debe ser realizada por un ciudadano valido.
@@ -418,7 +497,7 @@ namespace XUnitTestProject
             };
             var publicacionAEliminar = administrador.BuscarPublicacion(terminosDeBusqueda).First();
             var ciudadano = publicacionAEliminar.Ciudadano;
-            administrador.EliminarPublicacion(publicacionAEliminar.Titulo);
+            administrador.EliminarPublicacion(publicacionAEliminar, ciudadano);
 
             try
             {

@@ -62,5 +62,20 @@ namespace publiquejas
                 return string.Join(string.Empty, data.Select(x => x.ToString("x2")));
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Ciudadano ciudadano))
+            {
+                return false;
+            }
+            
+            return NombreCompleto == ciudadano.NombreCompleto && UserName == ciudadano.UserName;
+        }
+        
+        public override int GetHashCode()
+        {
+            return UserName.GetHashCode();
+        }
     }
 }

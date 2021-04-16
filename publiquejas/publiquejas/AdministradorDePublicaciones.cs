@@ -73,14 +73,24 @@ namespace publiquejas
             publicacionesEncontradas.First().Editar(nuevosDatos, ciudadanoAutorizado);
         }
 
-        public void EliminarPublicacion(string titulo)
+        public void EliminarPublicacion(Publicacion publicacion, Ciudadano ciudadano)
         {
-             var terminosDeBusqueda = new List<TerminoDeBusqueda<Publicacion>>()
-             {
-                  new TerminoTexto<Publicacion>("titulo", titulo)
-             };
-             Publicacion publicacion = BuscarPublicacion(terminosDeBusqueda).FirstOrDefault();
-             _publicaciones.Remove(publicacion);
+            if (!publicacion.Ciudadano.Equals(ciudadano))
+            {
+                throw new CiudadanoConPermisosInsuficientes(ciudadano.NombreCompleto);
+            }
+
+            if (publicacion.Votos.Count > 0)
+            {
+                throw new PublicacionConVotos(publicacion.Titulo);
+            }
+
+            if (publicacion.Comentarios.Count > 0)
+            {
+                throw new PublicacionConComentarios(publicacion.Titulo);
+            }
+
+            _publicaciones.Remove(publicacion);
         }
 
         public static ICategoria BuscarCategoria(string nombreDeCategoria, IList<ICategoria> categorias)
